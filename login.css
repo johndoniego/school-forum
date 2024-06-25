@@ -1,0 +1,140 @@
+
+.parent {
+  display: flex;
+  margin: 20px auto;
+  width: 90vw;
+  height: 90vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 40px;
+  overflow: hidden;
+}
+
+:root {
+  --clr-1: #673F69;
+  --clr-2: #D74B76;
+  --clr-3: #FB6D48;
+  --clr-4: #FFAF45;
+}
+
+.left-div {
+  width: 40vw;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom left, var(--clr-4), var(--clr-3), var(--clr-2), var(--clr-1));
+}
+
+.left-div img {
+  cursor: pointer;
+}
+
+.middle-div {
+  width: 3vw;
+  height: 90vh;
+  background: rgb(232, 214, 214);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middle-div p {
+  transform: rotate(270deg);
+  font-size: 50px;
+  white-space: nowrap;
+}
+
+.right-div {
+  width: 57vw;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url("images/csubackground.jpg");
+  left: 0px;
+  top: 0px;
+  background-size: 300%;
+  background-position: 0% 0%;
+  animation: pan-image 15s linear infinite;
+}
+
+@keyframes pan-image {
+  0% {
+    background-position: 36% 42%;
+    background-size: 300%;
+  }
+  20% {
+    background-position: 30% 35%;
+    background-size: 200%;
+  }
+  20.0001% {
+    background-position: 60% 85%;
+    background-size: 500%;
+  }
+  40% {
+    background-position: 49% 81%;
+    background-size: 500%;
+  }
+  40.0001% {
+    background-position: 80% 42%;
+    background-size: 300%;
+  }
+  60% {
+    background-position: 84% 33%;
+    background-size: 300%;
+  }
+  60.0001% {
+    background-position: 0% 0%;
+    background-size: 300%;
+  }
+  80% {
+    background-position: 15% 4%;
+    background-size: 300%;
+  }
+  80.0001% {
+    background-position: 80% 10%;
+    background-size: 300%;
+  }
+  100% {
+    background-position: 72% 14%;
+    background-size: 300%;
+  }
+}
+
+form {
+  width: 40%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 80%;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  color: #333;
+  font-weight: bold;
+  transition: transform 0.3s;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+.right-div h1 {
+  color: black;
+  font-size: 54px;
+}
+
