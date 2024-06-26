@@ -34,7 +34,7 @@ $totalPages = ceil($totalPosts / $perPage);
   <title>Welcome to the CSU Forum</title>
   <link rel="stylesheet" href="assets/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css">
   <script src="assets/bootstrap-5.3.0-alpha3-dist/js/bootstrap.js"></script>
-  <script src="assets/jquery-3.7.1.js"></script>
+  <script src="./assets/jquery-3.7.1.min.js"></script>
   <script src="tinymce_7.2.0\tinymce\js\tinymce\tinymce.min.js"></script>
   <script type="text/javascript">
   tinymce.init({
