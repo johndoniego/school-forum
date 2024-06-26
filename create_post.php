@@ -4,7 +4,7 @@ include('config.php');
 
 // Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user_id = 4; // Make sure this user ID exists in your `users` table
+    $user_id = $_SESSION['UserID']; // Make sure this user ID exists in your `users` table
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $content = mysqli_real_escape_string($conn, $_POST['mytextarea']);
     $creationDate = date('Y-m-d H:i:s'); // Current date and time
