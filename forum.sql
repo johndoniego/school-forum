@@ -57,3 +57,24 @@ CREATE TABLE Bookmarks (
     FOREIGN KEY (PostID) REFERENCES Posts(PostID)
 );
 
+-- Step 1: Create Categories Table
+CREATE TABLE `Categories` (
+  `CategoryID` INT AUTO_INCREMENT PRIMARY KEY,
+  `CategoryName` VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Step 2: Add CategoryID Column to Posts Table
+ALTER TABLE `Posts`
+ADD COLUMN `CategoryID` INT,
+ADD CONSTRAINT `FK_Posts_Categories` FOREIGN KEY (`CategoryID`) REFERENCES `Categories`(`CategoryID`);
+
+-- Step 3: Insert Category Data
+INSERT INTO `Categories` (`CategoryName`) VALUES
+('Homework Help'),
+('Club Announcements'),
+('Event Updates'),
+('General Discussion');
+
+-- Step 4 (Optional): Update Existing Posts with Categories
+-- Example: Update a post to "Homework Help" category
+-- UPDATE `Posts` SET `CategoryID` = (SELECT `CategoryID` FROM `Categories` WHERE `CategoryName` = 'Homework Help') WHERE `PostID` = [YourPostID];

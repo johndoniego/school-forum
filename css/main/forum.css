@@ -1,0 +1,74 @@
+body .post-container {
+    display: flex;
+    justify-content: center;
+    /* Centers children horizontally in the container */
+    align-items: center;
+    /* Centers children vertically in the container */
+    min-height: 100vh;
+    /* Full viewport height */
+    flex-direction: column;
+    /* Stack children vertically */
+}
+
+.post-container {
+    height: 50%;
+    width: 60%;
+    margin: auto;
+    /* Ensures horizontal centering if not using flexbox on the body */
+}
+
+.posts {
+    height: 50%;
+    /* Reduced from 80% to make posts shorter */
+    width: 100%;
+    /* Adjust width to control how wide the posts are */
+    margin: auto;
+    /* Center the posts horizontally */
+    padding: 10px;
+    /* Adjust padding inside the posts */
+    line-height: 1.5rem;
+    height: 3em;
+    overflow: hidden;
+}
+
+.posts p,
+.posts h1,
+.posts h2,
+.posts h3 {
+    font-size: 14px;
+    /* Adjust font size as needed */
+}
+
+.post-container .container>div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-buttons {
+    text-align: center;
+    /* Center-align the buttons */
+    margin-top: 20px;
+    /* Add some space above the category buttons */
+    margin-bottom: 20px;
+    /* Add some space below the category buttons before the posts start */
+}
+
+.category-buttons .btn {
+    margin: 5px;
+    /* Add some space around each button */
+}
+.recent-post-container {
+    position: absolute;
+    /* or 'fixed' if you want it to stay at the top right when scrolling */
+    top: 2vh;
+    right: 2vw;
+}
+.small-post-img {
+width: 100px; /* Adjust the width as needed */
+height: auto; /* This ensures the aspect ratio is maintained */
+}
+.post-img {
+width: 200px; /* Adjust the width as needed */
+height: auto; /* This ensures the aspect ratio is maintained */
+}

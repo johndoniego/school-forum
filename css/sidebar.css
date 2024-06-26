@@ -1,12 +1,16 @@
 .sidebar {
-    width: 50px;
+    width: 70px;
     height: 100%;
     position: fixed;
     left: 0;
     top: 0;
-    background-color: #333;
+    background-color: white;
     transition: width 0.5s;
     overflow: hidden;
+    z-index: 1000;
+    border-right: 2px solid grey;
+    
+
 }
 
 .sidebar:hover {
@@ -25,15 +29,15 @@
 .sidebar ul li a {
     display: flex;
     align-items: center;
-    color: white;
     padding: 10px;
     text-decoration: none;
 }
 
 .sidebar ul li img.icon {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     margin-right: 10px;
+    filter: brightness(0) invert(0);
 }
 
 .sidebar ul {
@@ -49,7 +53,7 @@
     display: flex;
     align-items: center;
     text-decoration: none;
-    color: white;
+    color: black;
 }
 
 .icon {
@@ -58,7 +62,8 @@
     margin-right: 10px;
 }
 
-.logout-separator {
-    margin-top: 350px;
+.separator {
+    margin-top: 200px;
     /* Adjust the value as needed */
 }
+

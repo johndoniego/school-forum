@@ -1,18 +1,25 @@
 <div class="sidebar">
     <ul>
-        <li></li>
-        <li></li>
-        <li><a href="home.php"><i class="fas fa-home"><img src="assets/img/home.svg" alt="Home" class="icon"></i><span
-                    class="link-text">Home</span></a></li>
-        <li><a href="forum.php"><i class="fas fa-comments"><img src="assets/img/users-alt.svg" alt="Home"
+        <li><a href="home.php"><i class="fas fa-home"><img src="images/csulogo.png" alt="Home" class="icon"></i><span
+                    class="link-text">CSU Forum</span></a></li>
+        <hr>
+        <li><a href="forum.php"><i class="fas fa-comments"><img src="assets/img/comment.png" alt="Home"
                         class="icon"></i><span class="link-text">Forum</span></a></li>
-        <li><a href="#" onclick="shareContent()"><i class="fas fa-share-alt"><img src="assets/img/home.svg" alt="Home"
+        <hr>
+        <li><a href="bookmark.php"><i class="fas fa-question"></i><img src="assets/img/bookmark.png" alt="Help"
+                    class="icon"><span class="link-text">bookmarks</span></a></li>
+        <hr>
+        <li><a href="#" onclick="shareContent()"><i class="fas fa-share-alt"><img src="assets/img/share.png" alt="Home"
                         class="icon"></i><span class="link-text">Share</span></a></li>
-        <li><a href="userinfo.php"><i class="fas fa-user"></i><img src="assets/img/user.svg" alt="Home"
-                    class="icon"><span class="link-text">User</span></a></li>
-        <li class="logout-separator"><a href="logout.php"><i class="fas fa-sign-out-alt"><img src="assets/img/home.svg"
-                        alt="Home" class="icon"></i><span class="link-text">Logout</span></a></li>
-        <li><a href="userinfo.php"><i class="fas fa-user"></i><img src="assets/img/user.svg" alt="Home"
-                    class="icon"><span class="link-text">User</span></a></li>
+        <hr>
+        <li><a href="about.php"><i class="fas fa-info-circle"><img src="assets/img/question.png" alt="About"
+                        class="icon"></i><span class="link-text">About</span></a></li>
+        <hr>
+        <li><a href="contact.php"><i class="fas fa-envelope"><img src="assets/img/phone-call.png" alt="Contact"
+                        class="icon"></i><span class="link-text">Contact Us</span></a></li>
+        <hr>
+        <li><a href="logout.php"><i class="fas fa-sign-out-alt"><img src="assets/img/exit.png" alt="Home"
+                        class="icon"></i><span class="link-text">Logout</span></a></li>
+        <hr>
     </ul>
 </div>
