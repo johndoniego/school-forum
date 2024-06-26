@@ -101,9 +101,9 @@ $totalPages = ceil($totalPosts / $perPage);
     <?php foreach ($recentPosts as $post): ?>
         <div class="card mb-3">
             <div class="card-body">
-                <h5 class="card-title"><?= htmlspecialchars($post['Title'] ?? 'No Title') ?></h5>
-                <p class="card-text"><?= htmlspecialchars($post['Content'] ?? 'No Content') ?></p>
-                <p class="card-text"><?= htmlspecialchars($post['ImagePath'] ?? '') ?></p>
+                <h5 class="card-title"><?= $post['Title'] ?? 'No Title' ?></h5>
+                <p class="card-text"><?= $post['Content'] ?? 'No Content' ?></p>
+                <p class="card-text"><?= $post['ImagePath'] ?? '' ?></p>
                 <p class="card-text"><small class="text-muted">Posted on <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
             </div>
         </div>
