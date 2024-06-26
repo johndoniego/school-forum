@@ -1,0 +1,64 @@
+.sidebar {
+    width: 50px;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #333;
+    transition: width 0.5s;
+    overflow: hidden;
+}
+
+.sidebar:hover {
+    width: 200px;
+}
+
+.link-text {
+    display: none;
+    margin-left: 10px;
+}
+
+.sidebar:hover .link-text {
+    display: inline;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.sidebar ul li img.icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 10px 0;
+}
+
+.sidebar ul li a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+}
+
+.icon {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}
+
+.logout-separator {
+    margin-top: 350px;
+    /* Adjust the value as needed */
+}
