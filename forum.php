@@ -72,3 +72,51 @@ $totalPages = ceil($totalPosts / $perPage);
         <h5 class="modal-title" id="createPostModalLabel">Create New Post</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <form action="create_post.php" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="postTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="postTitle" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label for="mytextarea" class="form-label">Content</label>
+            <textarea id="mytextarea" name="mytextarea" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="postImage" class="form-label">Add Image</label>
+            <input type="file" class="form-control" id="postImage" name="image">
+          </div>
+          <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+    <h2>Recent Posts</h2>
+    <?php foreach ($recentPosts as $post): ?>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><?= htmlspecialchars($post['Title'] ?? 'No Title') ?></h5>
+                <p class="card-text"><?= htmlspecialchars($post['Content'] ?? 'No Content') ?></p>
+                <p class="card-text"><?= htmlspecialchars($post['ImagePath'] ?? '') ?></p>
+                <p class="card-text"><small class="text-muted">Posted on <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <?php for($i = 1; $i <= $totalPages; $i++): ?>
+      <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>"><a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+    <?php endfor; ?>
+  </ul>
+</nav>
+
+</body>
+</html>
