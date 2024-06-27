@@ -3,6 +3,7 @@
     color: white;
     padding: 10px 0;
     border-bottom: 2px solid grey;
+    height: 60px;
 }
 
 #topnav ul {
@@ -106,4 +107,26 @@ hr {
     /* Background color of the header */
     border-bottom: 1px solid #e0e0e0;
     /* Optional: adds a bottom border */
+}
+
+/* Adjust the "Create Post" button size */
+.btn.btn-primary {
+    font-size: 14px;
+    /* Smaller font size */
+    padding: 5px 10px;
+    /* Smaller padding */
+}
+
+/* Alternatively, if you want to only target the button in the header without affecting other buttons */
+#topnav .btn.btn-primary {
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+/* Adjust the user icon size */
+.user-icon {
+    width: 30px;
+    /* Adjust width as needed */
+    height: 30px;
+    /* Adjust height as needed */
 }
