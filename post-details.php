@@ -4,7 +4,7 @@ include('config.php');
 session_start();
 
 // Get the post ID from the URL
-$postId = 23;
+$postId = $_GET['id'] ?? null;
 
 // Fetch the post from the database
 $query = "SELECT * FROM posts WHERE PostID = ?";

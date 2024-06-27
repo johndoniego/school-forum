@@ -8,7 +8,7 @@ $perPage = 10; // Number of posts per page
 $offset = ($page - 1) * $perPage;
 
 // Fetch the 5 most recent posts with pagination
-$sql = "SELECT Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT $perPage OFFSET $offset";
+$sql = "SELECT PostID, Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT $perPage OFFSET $offset";
 $result = $conn->query($sql);
 $recentPosts = [];
 if ($result->num_rows > 0) {
@@ -109,7 +109,7 @@ $totalPages = ceil($totalPosts / $perPage);
 
                     <!-- Post Title -->
                     <h5 class="card-title"><img src="assets/img/placeholder.png" alt="User Image" class="user-img"><a
-                            class="post-title" href="post-details.php"><?= $post['Title'] ?? 'No Title' ?></a></h5>
+                            class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?= $post['Title'] ?? 'No Title' ?></a></h5>
                     <p class="card-text"><small class="text-muted">Posted on
                             <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
                 </div>
