@@ -1,31 +1,14 @@
 .sidebar {
-    width: 70px;
+    width: 200px;
     height: 100%;
     position: fixed;
     left: 0;
     top: 0;
     background-color: white;
-    transition: width 0.5s;
     overflow: hidden;
     z-index: 1000;
     border-right: 2px solid grey;
-    
-
 }
-
-.sidebar:hover {
-    width: 200px;
-}
-
-.link-text {
-    display: none;
-    margin-left: 10px;
-}
-
-.sidebar:hover .link-text {
-    display: inline;
-}
-
 .sidebar ul li a {
     display: flex;
     align-items: center;
@@ -66,4 +49,3 @@
     margin-top: 200px;
     /* Adjust the value as needed */
 }
-

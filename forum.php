@@ -41,16 +41,17 @@ $totalPages = ceil($totalPosts / $perPage);
     <script src="./assets/jquery-3.7.1.min.js"></script>
     <script src="tinymce_7.2.0\tinymce\js\tinymce\tinymce.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript">
-  
     tinymce.init({
         selector: '#mytextarea'
     });
     </script>
 
     <style>
-   
+        .post-title{
+            text-decoration: none;
+            color: black;
+        }
     </style>
 </head>
 
@@ -105,26 +106,23 @@ $totalPages = ceil($totalPosts / $perPage);
             <?php foreach ($recentPosts as $post): ?>
             <div class="card mb-3">
                 <div class="card-body posts">
-                    <h5 class="card-title"><?= $post['Title'] ?? 'No Title' ?></h5>
-                    <p class="card-text">
-                            <?php if (!empty($post['ImagePath'])): ?>
-                            <img class="post-img" src="<?= htmlspecialchars($post['ImagePath'], ENT_QUOTES, 'UTF-8') ?>"
-                                alt="Post Image">
-                            <?php endif; ?>
-                        </p>
+
+                    <!-- Post Title -->
+                    <h5 class="card-title"><img src="assets/img/placeholder.png" alt="User Image" class="user-img"><a
+                            class="post-title" href="post-details.php"><?= $post['Title'] ?? 'No Title' ?></a></h5>
                     <p class="card-text"><small class="text-muted">Posted on
                             <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
                 </div>
             </div>
             <?php endforeach; ?>
             <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <?php for($i = 1; $i <= $totalPages; $i++): ?>
-            <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>"><a class="page-link"
-                    href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
-            <?php endfor; ?>
-        </ul>
-    </nav>
+                <ul class="pagination">
+                    <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>"><a class="page-link"
+                            href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                    <?php endfor; ?>
+                </ul>
+            </nav>
         </div>
         <!-- recent post -->
         <div class="recent-post-container">
@@ -133,18 +131,20 @@ $totalPages = ceil($totalPosts / $perPage);
             <div class="container mt-5">
                 <h2>Recent Posts</h2>
                 <?php 
-                $limitedPosts = array_slice($recentPosts, 0, 5); // Limit to first 5 posts
-                foreach ($limitedPosts as $post): ?>
+            $limitedPosts = array_slice($recentPosts, 0, 5); // Limit to first 5 posts
+            foreach ($limitedPosts as $post): ?>
                 <div class="card mb-3">
                     <div class="card-body posts">
-                        <h5 class="card-title"><?= $post['Title'] ?? 'No Title' ?></h5>
-                        <p class="card-text"><?= $post['Content'] ?? 'No Content' ?></p>
-                        <p class="card-text">
-                            <?php if (!empty($post['ImagePath'])): ?>
-                            <img class="small-post-img" src="<?= htmlspecialchars($post['ImagePath'], ENT_QUOTES, 'UTF-8') ?>"
-                                alt="Post Image">
-                            <?php endif; ?>
-                        </p>
+                        <h5 class="card-title">
+                            <img src="assets/img/placeholder.png" alt="User Image" class="user-img">
+                            <a class="post-title" href=""><?php
+                              $title = $post['Title'] ?? 'No Title';
+                                 echo mb_substr($title, 0, 14);
+                                 if (mb_strlen($title) > 14) {
+                                  echo "...";
+                                    }
+                            ?></a>
+                        </h5>
                         <p class="card-text"><small class="text-muted">Posted on
                                 <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
                     </div>
@@ -154,5 +154,6 @@ $totalPages = ceil($totalPosts / $perPage);
         </div>
     </div>
 </body>
+3
 
 </html>
