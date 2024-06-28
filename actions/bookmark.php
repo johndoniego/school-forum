@@ -21,6 +21,7 @@ $checkResult = $checkStmt->get_result();
 if ($checkResult->num_rows > 0) {
     $_SESSION['bookmark_added'] = true; // Set a session flag
     header("Location: ../post-details.php?id=$postId&bookmarked=1");
+    exit();
 }
 
 // Insert the new bookmark
