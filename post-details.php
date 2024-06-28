@@ -40,94 +40,97 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <style>
-    .post-container {
-        max-width: 60%;
-        /* Adjust the width as needed */
-        margin: 0 auto;
-        /* Centers the container horizontally */
-        padding: 20px;
-        /* Adds padding inside the container */
-        word-wrap: break-word;
-        /* Correct property name for breaking long words */
-        overflow-wrap: break-word;
-        /* Ensures overflow text is wrapped */
-        border-radius: 10px;
-    }
+        .post-container {
+            max-width: 60%;
+            /* Adjust the width as needed */
+            margin: 0 auto;
+            /* Centers the container horizontally */
+            padding: 20px;
+            /* Adds padding inside the container */
+            word-wrap: break-word;
+            /* Correct property name for breaking long words */
+            overflow-wrap: break-word;
+            /* Ensures overflow text is wrapped */
+            border-radius: 10px;
+        }
 
-    .post-image {
-        width: auto;
-        /* Allows the image to scale based on its height */
-        height: 300px;
-        /* Default height */
-        max-width: 100%;
-        /* Ensures the image is not wider than its container */
-        object-fit: cover;
-        /* Adjusts the image's fit within the box without stretching it */
-    }
+        .post-image {
+            width: auto;
+            /* Allows the image to scale based on its height */
+            height: 300px;
+            /* Default height */
+            max-width: 100%;
+            /* Ensures the image is not wider than its container */
+            object-fit: cover;
+            /* Adjusts the image's fit within the box without stretching it */
+        }
 
-    .modal {
-        display: none;
-        /* Hidden by default */
-        position: fixed;
-        /* Stay in place */
-        z-index: 1001;
-        /* Sit on top */
-        padding-top: 100px;
-        /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        overflow: auto;
-        /* Enable scroll if needed */
-        background-color: rgb(0, 0, 0);
-        /* Fallback color */
-        background-color: rgba(0, 0, 0, 0.9);
-        /* Black w/ opacity */
-    }
-    .bookmarked {
-        display: none;
-        /* Hidden by default */
-        position: fixed;
-        /* Stay in place */
-        z-index: 1002;
-        /* Sit on top */
-        padding-top: 100px;
-        /* Location of the box */
-        left: 0;
-        top: 0;
-        width: 100%;
-        /* Full width */
-        height: 100%;
-        /* Full height */
-        overflow: auto;
-        /* Enable scroll if needed */
-        background-color: rgb(0, 0, 0);
-        /* Fallback color */
-        background-color: rgba(0, 0, 0, 0.9);
-        /* Black w/ opacity */
-    }
-    .modal-content {
-        margin: auto;
-        display: block;
-        width: 80%;
-        max-width: 700px;
-    }
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1001;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Black w/ opacity */
+        }
 
-    .close {
-        position: absolute;
-        top: 15px;
-        right: 35px;
-        color: #fff;
-        font-size: 40px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .modal-backdrop.show{
-        display: none;
-    }
+        .bookmarked {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1002;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Black w/ opacity */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-backdrop.show {
+            display: none;
+        }
     </style>
 </head>
 
@@ -160,7 +163,13 @@ if ($result->num_rows > 0) {
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Bookmarked successfully!</p>
+                    <p><?php
+                        if ($_GET["bookmarked"] == "0") {
+                            echo "Post bookmarked successfully!";
+                        } else {
+                            echo "Post already bookmarked!";
+                        }
+                        ?></p>
                 </div>
                 <div class="modal-footer">
                     <a href="bookmarks.php" class="btn btn-primary">View Bookmarks</a>
@@ -170,22 +179,22 @@ if ($result->num_rows > 0) {
     </div>
 
     <script>
-    document.getElementById('imageLink').onclick = function(event) {
-        event.preventDefault(); // Prevent the default anchor action
-        var modal = document.getElementById('imageModal');
-        var modalImg = document.getElementById('modalImage');
-        modal.style.display = "block";
-        modalImg.src = this.children[0].src; // Set the src of the modal image to the clicked image's src
-    };
+        document.getElementById('imageLink').onclick = function(event) {
+            event.preventDefault(); // Prevent the default anchor action
+            var modal = document.getElementById('imageModal');
+            var modalImg = document.getElementById('modalImage');
+            modal.style.display = "block";
+            modalImg.src = this.children[0].src; // Set the src of the modal image to the clicked image's src
+        };
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        var modal = document.getElementById('imageModal');
-        modal.style.display = "none";
-    }
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            var modal = document.getElementById('imageModal');
+            modal.style.display = "none";
+        }
     </script>
 
 </body>
