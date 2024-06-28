@@ -7,7 +7,7 @@
         <li><a href="forum.php"><i class="fas fa-comments"><img src="assets/img/comment.png" alt="Home"
                         class="icon"></i><span class="link-text">Forum</span></a></li>
         <hr>
-        <li><a href="bookmark.php"><i class="fas fa-question"></i><img src="assets/img/bookmark.png" alt="Help"
+        <li><a href="./bookmarks.php"><i class="fas fa-question"></i><img src="assets/img/bookmark.png" alt="Help"
                     class="icon"><span class="link-text">bookmarks</span></a></li>
         <hr>
         <li><a href="#" onclick="shareContent()"><i class="fas fa-share-alt"><img src="assets/img/share.png" alt="Home"

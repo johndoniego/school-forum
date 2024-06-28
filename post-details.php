@@ -31,7 +31,7 @@ if ($result->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($post['title']) ?></title>
+    <title><?=($post['title'])?></title>
     <link rel="stylesheet" href="assets/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -40,97 +40,122 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
     <style>
-        .post-container {
-            max-width: 60%;
-            /* Adjust the width as needed */
-            margin: 0 auto;
-            /* Centers the container horizontally */
-            padding: 20px;
-            /* Adds padding inside the container */
-            word-wrap: break-word;
-            /* Correct property name for breaking long words */
-            overflow-wrap: break-word;
-            /* Ensures overflow text is wrapped */
-            border-radius: 10px;
-        }
+    .post-container {
+        max-width: 60%;
+        /* Adjust the width as needed */
+        margin: 0 auto;
+        /* Centers the container horizontally */
+        padding: 20px;
+        /* Adds padding inside the container */
+        word-wrap: break-word;
+        /* Correct property name for breaking long words */
+        overflow-wrap: break-word;
+        /* Ensures overflow text is wrapped */
+        border-radius: 10px;
+    }
 
-        .post-image {
-            width: auto;
-            /* Allows the image to scale based on its height */
-            height: 300px;
-            /* Default height */
-            max-width: 100%;
-            /* Ensures the image is not wider than its container */
-            object-fit: cover;
-            /* Adjusts the image's fit within the box without stretching it */
-        }
+    .post-image {
+        width: auto;
+        /* Allows the image to scale based on its height */
+        height: 300px;
+        /* Default height */
+        max-width: 100%;
+        /* Ensures the image is not wider than its container */
+        object-fit: cover;
+        /* Adjusts the image's fit within the box without stretching it */
+    }
 
-        .modal {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            /* Stay in place */
-            z-index: 1001;
-            /* Sit on top */
-            padding-top: 100px;
-            /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%;
-            /* Full width */
-            height: 100%;
-            /* Full height */
-            overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgb(0, 0, 0);
-            /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.9);
-            /* Black w/ opacity */
-        }
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1001;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Black w/ opacity */
+    }
 
-        .bookmarked {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            /* Stay in place */
-            z-index: 1002;
-            /* Sit on top */
-            padding-top: 100px;
-            /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%;
-            /* Full width */
-            height: 100%;
-            /* Full height */
-            overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgb(0, 0, 0);
-            /* Fallback color */
-            background-color: rgba(0, 0, 0, 0.9);
-            /* Black w/ opacity */
-        }
+    .bookmarked {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1002;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Black w/ opacity */
+    }
 
-        .modal-content {
-            margin: auto;
-            display: block;
-            width: 80%;
-            max-width: 700px;
-        }
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
 
-        .close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
-        .modal-backdrop.show {
-            display: none;
-        }
+    .modal-backdrop.show {
+        display: none;
+    }
+
+    .actions {
+        width: 30px;
+        height: 35px;
+    }
+
+    .post-container {
+        position: relative;
+        /* This makes it the reference for absolute positioning of children */
+        border: 1px solid black;
+    }
+
+    .actions-container {
+        position: absolute;
+        /* Position the actions container absolutely within the post-container */
+        top: 10px;
+        /* Distance from the top of the post-container */
+        right: 10px;
+        /* Distance from the right of the post-container */
+    }
+
+    .actions {
+        cursor: pointer;
+        /* Optional: Changes the cursor to a pointer to indicate it's clickable */
+    }
     </style>
 </head>
 
@@ -138,14 +163,28 @@ if ($result->num_rows > 0) {
     <?php include('commons/sidebar.php') ?>
     <?php include('commons/header.php') ?>
 
-    <div class="container mt-5  post-container" style="border:1px solid black;">
+    <div class="container mt-5 post-container">
+        <div class="actions-container">
+            <?php if (isset($_GET['bookmarked'])): ?>
+            <?php if ($_GET['bookmarked'] == '1'): ?>
+            <a href="actions/remove-bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions"
+                    src="assets/img/remove-bookmark.png" alt="Remove Bookmark"></a>
+            <?php else: ?>
+            <a href="actions/bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions"
+                    src="assets/img/add-bookmark.png" alt="Add Bookmark"></a>
+            <?php endif; ?>
+            <?php else: ?>
+            <a href="actions/bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions"
+                    src="assets/img/add-bookmark.png" alt="Add Bookmark"></a>
+            <?php endif; ?>
+        </div>
         <h1><?= $post['Title'] ?></h1>
-        <a href="actions/bookmark.php?id=<?= $post['PostID'] ?>">Bookmark this post</a>
         <p><?= nl2br($post['Content']) ?></p>
+        <?php if (!empty($post['ImagePath'])): ?>
         <a href="#imageModal" id="imageLink">
-            <img class="post-image" src="<?= $post['ImagePath'] ?? '' ?>" alt="Post Image">
+            <img class="post-image" src="<?= $post['ImagePath'] ?>" alt="Post Image">
         </a>
-        <p></p>
+        <?php endif; ?>
     </div>
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
@@ -158,18 +197,19 @@ if ($result->num_rows > 0) {
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title">Bookmark Status</h5>
+                    <button style="color: black;" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <p><?php
-                        if ($_GET["bookmarked"] == "0") {
-                            echo "Post bookmarked successfully!";
-                        } else {
-                            echo "Post already bookmarked!";
-                        }
-                        ?></p>
+                    if ($_GET["bookmarked"] == "0") {
+                        echo "Post bookmarked successfully!";
+                    } else {
+                        echo "Post already bookmarked!";
+                    }
+                    ?></p>
                 </div>
                 <div class="modal-footer">
                     <a href="bookmarks.php" class="btn btn-primary">View Bookmarks</a>
@@ -179,22 +219,22 @@ if ($result->num_rows > 0) {
     </div>
 
     <script>
-        document.getElementById('imageLink').onclick = function(event) {
-            event.preventDefault(); // Prevent the default anchor action
-            var modal = document.getElementById('imageModal');
-            var modalImg = document.getElementById('modalImage');
-            modal.style.display = "block";
-            modalImg.src = this.children[0].src; // Set the src of the modal image to the clicked image's src
-        };
+    document.getElementById('imageLink').onclick = function(event) {
+        event.preventDefault(); // Prevent the default anchor action
+        var modal = document.getElementById('imageModal');
+        var modalImg = document.getElementById('modalImage');
+        modal.style.display = "block";
+        modalImg.src = this.children[0].src; // Set the src of the modal image to the clicked image's src
+    };
 
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
 
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            var modal = document.getElementById('imageModal');
-            modal.style.display = "none";
-        }
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        var modal = document.getElementById('imageModal');
+        modal.style.display = "none";
+    }
     </script>
 
 </body>

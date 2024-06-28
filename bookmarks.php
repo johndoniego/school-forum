@@ -25,19 +25,43 @@ $result = $stmt->get_result();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>My Bookmarks</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .bookmark { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        .bookmark h3 { margin: 0 0 10px 0; }
-        .bookmark a { color: #007bff; text-decoration: none; }
-        .bookmark a:hover { text-decoration: underline; }
-    </style>
+<style>
+body { font-family: Arial, sans-serif; margin: 20px; }
+.bookmark { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+.bookmark h3 { margin: 0 0 10px 0; }
+.bookmark a { color: #007bff; text-decoration: none; }
+.bookmark a:hover { text-decoration: underline; }
+.user-img {
+    width: 40px; /* Smaller size */
+    height: 40px; /* Equal width and height make it a circle */
+    border-radius: 50%; /* Circular shape */
+    object-fit: cover; /* Ensures the image covers the area without distorting aspect ratio */
+}
+.card {
+    position: relative;
+    max-width: 600px; /* Smaller width */
+    margin: 0 auto; /* Centering */
+}
+h3 { text-align: center; } /* Centering h3 */
+.remove-bookmark-btn img {
+    width: 20px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
+}
+</style>
 </head>
 <body>
-    <h2>My Bookmarked Posts</h2>
-    <?php if ($result->num_rows > 0): ?>
+<?php include('commons/header.php')?>       
+<?php include('commons/sidebar.php')?>
+<h3>My Bookmarks</h3>
+<?php if ($result->num_rows > 0): ?>
     <?php while ($row = $result->fetch_assoc()): ?>
         <div class="card mb-3">
             <div class="card-body">
+                <!-- Remove Bookmark Button -->
+                <a href="actions/remove-bookmark.php?postId=<?= $row['PostID'] ?>" class="remove-bookmark-btn" style="position: absolute; top: 10px; right: 10px;">
+    <img src="assets/img/remove-bookmark.png" alt="Remove Bookmark" style="cursor:pointer;">
+</a>
+                
                 <h5 class="card-title">
                     <img src="assets/img/placeholder.png" alt="User Image" class="user-img">
                     <a class="post-title" href="post-details.php?id=<?= htmlspecialchars($row['PostID']) ?>">
