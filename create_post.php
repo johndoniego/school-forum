@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $content = mysqli_real_escape_string($conn, $_POST['mytextarea']);
     $creationDate = date('Y-m-d H:i:s'); // Current date and time
+    $categoryID = $_POST['category'];
 
     // Handling multiple file uploads
     $target_dir = "uploads/";
@@ -54,8 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Concatenate all uploaded file paths to store in the database
     $imagePaths = implode(',', $uploadedFiles);
 
-    // SQL query to insert post into the database
-    $query = "INSERT INTO Posts (UserID, Title, Content, CreationDate, ImagePath) VALUES ('$user_id', '$title', '$content', '$creationDate', '$imagePaths')";
+    // SQL query to insert post into the databases
+    $query = "INSERT INTO Posts (UserID, Title, Content, CreationDate, ImagePath, CategoryID) VALUES ('$user_id', '$title', '$content', '$creationDate', '$imagePaths', '$categoryID')";
 
     if (mysqli_query($conn, $query)) {
         header("Location: forum.php");

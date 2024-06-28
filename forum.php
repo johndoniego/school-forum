@@ -1,30 +1,32 @@
 <?php
-include 'config.php'; // Make sure this file contains your database connection
+include 'admin/config.php'; // Ensure this file properly handles database connection errors
 session_start();
 
-// Determine the current page
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$perPage = 10; // Number of posts per page
+$perPage = 10;
 $offset = ($page - 1) * $perPage;
 
-// Fetch the 5 most recent posts with pagination
-$sql = "SELECT PostID, Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT $perPage OFFSET $offset";
-$result = $conn->query($sql);
-$recentPosts = [];
-if ($result->num_rows > 0) {
-  while($row = $result->fetch_assoc()) {
-    $recentPosts[] = $row;
-  }
-}
+$sql = "SELECT PostID, Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$recentPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch total number of posts
 $totalSql = "SELECT COUNT(*) as total FROM Posts";
 $totalResult = $conn->query($totalSql);
-$totalRow = $totalResult->fetch_assoc();
+$totalRow = $totalResult->fetch(PDO::FETCH_ASSOC);
 $totalPosts = $totalRow['total'];
 $totalPages = ceil($totalPosts / $perPage);
-?>
 
+function fetchLimitedRecentPosts($conn, $limit = 5) {
+    $sql = "SELECT PostID, Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT :limit";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -57,37 +59,44 @@ $totalPages = ceil($totalPosts / $perPage);
     <?php include('commons/sidebar.php')?>
     <?php include('commons/header.php')?>
     <!-- Create Post Modal -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createPostModalLabel">Create New Post</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="create_post.php" method="POST" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="postTitle" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="postTitle" name="title" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="mytextarea" class="form-label">Content</label>
-                            <textarea id="mytextarea" name="mytextarea" class="form-control"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="postImage" class="form-label">Add Image</label>
-                            <input type="file" class="form-control" id="postImage" name="image">
-                        </div>
-                        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPostModalLabel">Create New Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="create_post.php" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="postTitle" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="postTitle" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mytextarea" class="form-label">Content</label>
+                        <textarea id="mytextarea" name="mytextarea" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="postImage" class="form-label">Add Image</label>
+                        <input type="file" class="form-control" id="postImage" name="image">
+                    </div>
+                    <!-- Category Selection Dropdown -->
+                    <div class="mb-3">
+                        <label for="postCategory" class="form-label">Category</label>
+                        <select class="form-select" id="postCategory" name="category">
+                            <!-- Dynamically populated options -->
+                            <option value="1">Homework Help</option>
+                            <option value="2">Club Announcements</option>
+                            <option value="3">Event Updates</option>
+                            <option value="4">General Discussion</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 
     <div class="post-container">
         <div class="container mt-3">
@@ -135,8 +144,8 @@ $totalPages = ceil($totalPosts / $perPage);
             <div class="container mt-5">
                 <h2>Recent Posts</h2>
                 <?php 
-            $limitedPosts = array_slice($recentPosts, 0, 5); // Limit to first 5 posts
-            foreach ($limitedPosts as $post): ?>
+            $recentPosts = fetchLimitedRecentPosts($conn, 5); // Fetch 5 most recent posts
+            foreach ($recentPosts as $post): ?>
                 <div class="card mb-3">
                     <div class="card-body posts">
                         <h5 class="card-title">
@@ -158,6 +167,6 @@ $totalPages = ceil($totalPosts / $perPage);
         </div>
     </div>
 </body>
-3
+
 
 </html>
