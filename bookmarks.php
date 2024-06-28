@@ -1,47 +1,67 @@
 <?php
 session_start(); // Start the session
+include('config.php'); // Include your database connection setup
 
-// Check if the user is logged in, if not then redirect to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-    header("location: login.php");
-    exit;
+// Check if the user is logged in
+if (!isset($_SESSION['UserID'])) {
+    die('You must be logged in to view your bookmarks.');
 }
 
-// Include config file for database connection
-require_once "config.php";
+$userId = $_SESSION['UserID'];
 
-// Attempt to query database table and retrieve bookmarks
-$userId = $_SESSION['user_id']; // Assuming 'user_id' is stored in session upon login
-$sql = "SELECT * FROM bookmarks WHERE user_id = ?";
+// Fetch bookmarked posts
+$query = "SELECT p.* FROM Posts p INNER JOIN Bookmarks b ON p.PostID = b.PostID WHERE b.UserID = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if($stmt = mysqli_prepare($link, $sql)){
-    // Bind variables to the prepared statement as parameters
-    mysqli_stmt_bind_param($stmt, "i", $param_user_id);
-    
-    // Set parameters
-    $param_user_id = $userId;
-    
-    // Attempt to execute the prepared statement
-    if(mysqli_stmt_execute($stmt)){
-        $result = mysqli_stmt_get_result($stmt);
-        
-        // Check if any bookmarks exist for the user
-        if(mysqli_num_rows($result) > 0){
-            // Fetch result rows as an associative array
-            while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                echo "<div><p>" . $row["bookmark_name"] . "</p></div>"; // Display each bookmark
-            }
-        } else{
-            echo "<p>No bookmarks found.</p>"; // No bookmarks found
-        }
-    } else{
-        echo "Oops! Something went wrong. Please try again later.";
-    }
-}
-
-// Close statement
-mysqli_stmt_close($stmt);
-
-// Close connection
-mysqli_close($link);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>My Bookmarks</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .bookmark { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .bookmark h3 { margin: 0 0 10px 0; }
+        .bookmark a { color: #007bff; text-decoration: none; }
+        .bookmark a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h2>My Bookmarked Posts</h2>
+    <?php if ($result->num_rows > 0): ?>
+    <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <img src="assets/img/placeholder.png" alt="User Image" class="user-img">
+                    <a class="post-title" href="post-details.php?id=<?= htmlspecialchars($row['PostID']) ?>">
+                        <?php
+                        $title = htmlspecialchars($row['Title']);
+                        echo mb_substr($title, 0, 69);
+                        if (mb_strlen($title) > 50) {
+                            echo "...";
+                        }
+                        ?>
+                    </a>
+                </h5>
+                <p class="card-text">
+                    <small class="text-muted">Posted on <?= htmlspecialchars($row['CreationDate'] ?? 'Unknown Date') ?></small>
+                </p>
+            </div>
+        </div>
+    <?php endwhile; ?>
+<?php else: ?>
+    <p>You have no bookmarked posts.</p>
+<?php endif; ?>
+</body>
+</html>
+<?php
+$stmt->close();
+$conn->close();
 ?>
