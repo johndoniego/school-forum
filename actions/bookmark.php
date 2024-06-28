@@ -19,7 +19,8 @@ $checkStmt->execute();
 $checkResult = $checkStmt->get_result();
 
 if ($checkResult->num_rows > 0) {
-    die('You have already bookmarked this post.');
+    $_SESSION['bookmark_added'] = true; // Set a session flag
+    header("Location: ../post-details.php?id=$postId&bookmarked=1");
 }
 
 // Insert the new bookmark
@@ -29,7 +30,7 @@ $insertStmt->bind_param("ii", $userId, $postId);
 
 if ($insertStmt->execute()) {
     $_SESSION['bookmark_added'] = true; // Set a session flag
-    header("Location: ../post-details.php?id=$postId");
+    header("Location: ../post-details.php?id=$postId&bookmarked=0");
     exit(); // Ensure no further code is executed after redirect
 } else {
     echo "Error bookmarking post.";
