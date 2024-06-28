@@ -8,12 +8,12 @@ if (!isset($_SESSION['UserID'])) {
 }
 
 // Check if PostID is provided
-if (!isset($_GET['postId'])) {
+if (!isset($_GET['id'])) {
     die('Post ID is required.');
 }
 
 $userId = $_SESSION['UserID'];
-$postId = $_GET['postId'];
+$postId = $_GET['id'];
 
 // Prepare the delete statement
 $query = "DELETE FROM Bookmarks WHERE UserID = ? AND PostID = ?";
