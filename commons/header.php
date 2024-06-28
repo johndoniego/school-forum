@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="css/header.css">
 <header class="sticky-header">
     <div id="topnav">
         <div class="inner">
@@ -12,7 +13,7 @@
                 <ul>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">Create
                         Post</button>
-                    <li><a href="#"><img class="user-icon" name="user-icon" src="assets/img/placeholder.png" alt="user"></a></li>
+                    <li><a href="#"><img style="border-radius: 50% ;" class="user-icon" name="user-icon" src="assets/img/placeholder.png" alt="user"></a></li>
                 </ul>
             </nav>
         </div>

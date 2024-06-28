@@ -1,9 +1,3 @@
-img.user-icon {
-    width: 50px;
-    margin: 0 auto;
-
-}
-
 .user-img {
     width: 40px;
     /* Adjust the size as needed */
@@ -32,6 +26,8 @@ body .post-container {
     height: 50%;
     width: 60%;
     margin: auto;
+    word-wrap: break-word; /* Correct property name for breaking long words */
+    overflow-wrap: break-word; /* Ensures overflow text is wrapped */
     /* Ensures horizontal centering if not using flexbox on the body */
 }
 

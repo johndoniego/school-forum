@@ -48,14 +48,13 @@ CREATE TABLE `UserProfile` (
   FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE Bookmarks (
-    BookmarkID INT AUTO_INCREMENT PRIMARY KEY,
-    UserID INT NOT NULL,
-    PostID INT NOT NULL,
-    UNIQUE KEY unique_bookmark (UserID, PostID),
-    FOREIGN KEY (UserID) REFERENCES Users(UserID),
-    FOREIGN KEY (PostID) REFERENCES Posts(PostID)
-);
+CREATE TABLE `Bookmarks` (
+  `BookmarkID` INT AUTO_INCREMENT PRIMARY KEY,
+  `UserID` INT NOT NULL,
+  `PostID` INT NOT NULL,
+  FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`),
+  FOREIGN KEY (`PostID`) REFERENCES `Posts`(`PostID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Step 1: Create Categories Table
 CREATE TABLE `Categories` (

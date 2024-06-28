@@ -34,8 +34,6 @@ $totalPages = ceil($totalPosts / $perPage);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to the CSU Forum</title>
     <link rel="stylesheet" href="assets/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="css/sidebar.css">
-    <link rel="stylesheet" href="css/header.css">
     <link rel="stylesheet" href="css/main/forum.css">
     <script src="assets/bootstrap-5.3.0-alpha3-dist/js/bootstrap.js"></script>
     <script src="./assets/jquery-3.7.1.min.js"></script>
@@ -109,7 +107,13 @@ $totalPages = ceil($totalPosts / $perPage);
 
                     <!-- Post Title -->
                     <h5 class="card-title"><img src="assets/img/placeholder.png" alt="User Image" class="user-img"><a
-                            class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?= $post['Title'] ?? 'No Title' ?></a></h5>
+                            class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?php
+                              $title = $post['Title'] ?? 'No Title';
+                                 echo mb_substr($title, 0, 69);
+                                 if (mb_strlen($title) > 50) {
+                                  echo "...";
+                                    }
+                            ?></a></h5>
                     <p class="card-text"><small class="text-muted">Posted on
                             <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
                 </div>
