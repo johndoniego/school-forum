@@ -191,6 +191,47 @@ if ($checkResult->num_rows > 0) {
             </a>
         <?php endif; ?>
     </div>
+    <div class="container mt-5 post-container">
+        <h2>Comments</h2>
+        <div class="container" style="border: 1px solid black;">
+            <?php
+            $commentsQueryResult = $conn->query("SELECT * FROM comments WHERE PostID = $postId");
+            $comments = [];
+            $tree = [];
+
+            while ($comment = $commentsQueryResult->fetch_assoc()) {
+                $comments[$comment["CommentID"]] = $comment;
+            }
+
+            foreach ($comments as $comment) {
+                if ($comment["ParentID"] == 0) {
+                    $tree[] = &$comments[$comment["CommentID"]];
+                } else {
+                    $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
+                }
+            }
+
+            function printComments($comments) {
+                foreach ($comments as $comment) {
+                    echo "<div style='border: 1px solid black; margin: 10px; padding: 10px;'>";
+                    echo $comment["Content"];
+                    echo "<br>";
+                    echo "ID: ".$comment["CommentID"];
+                    echo "<br>";
+                    echo "ParentID: ".$comment["ParentID"];
+                    echo "</div>";
+                    echo "<div style='margin-left: 10px;'>";
+                    if (isset($comment["children"])) {
+                        printComments($comment["children"]);
+                    }
+                    echo "</div>";
+                }
+            }
+
+            printComments($tree);
+            ?>
+        </div>
+    </div>
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
