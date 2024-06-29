@@ -13,7 +13,7 @@
                 <ul>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createPostModal">Create
                         Post</button>
-                    <li><a href="#"><img style="border-radius: 50% ;" class="user-icon" name="user-icon" src="assets/img/placeholder.png" alt="user"></a></li>
+                    <li><a href="./user.php"><img style="border-radius: 50% ;" class="user-icon" name="user-icon" src="assets/img/placeholder.png" alt="user"></a></li>
                 </ul>
             </nav>
         </div>

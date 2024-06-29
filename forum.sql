@@ -29,24 +29,6 @@ CREATE TABLE `Comments` (
   FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `UserProfile` (
-  `ProfileID` INT AUTO_INCREMENT PRIMARY KEY,
-  `UserID` INT NOT NULL,
-  `FirstName` VARCHAR(255) NOT NULL,
-  `LastName` VARCHAR(255) NOT NULL,
-  `DateOfBirth` DATE,
-  `ProfilePicture` VARCHAR(255),
-  `Bio` TEXT,
-  `ContactEmail` VARCHAR(255),
-  `PhoneNumber` VARCHAR(20),
-  `Address` VARCHAR(255),
-  `City` VARCHAR(100),
-  `State` VARCHAR(100),
-  `Country` VARCHAR(100),
-  `PostalCode` VARCHAR(20),
-  `Preferences` TEXT,
-  FOREIGN KEY (`UserID`) REFERENCES `Users`(`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `Bookmarks` (
   `BookmarkID` INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,6 +55,12 @@ INSERT INTO `Categories` (`CategoryName`) VALUES
 ('Club Announcements'),
 ('Event Updates'),
 ('General Discussion');
+
+ALTER TABLE `Users`
+ADD COLUMN `FirstName` VARCHAR(255) NOT NULL,
+ADD COLUMN `LastName` VARCHAR(255) NOT NULL,
+ADD COLUMN `DateOfBirth` DATE,
+ADD COLUMN `ProfilePicture` VARCHAR(255);
 
 -- Step 4 (Optional): Update Existing Posts with Categories
 -- Example: Update a post to "Homework Help" category
