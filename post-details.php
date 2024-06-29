@@ -217,7 +217,7 @@ if ($checkResult->num_rows > 0) {
             <br>
             <div class="comment-section">
                 <h3>Leave a Comment</h3>
-                <form action="actions/submit-comment.php?order=<?= $_GET["order"] ?>" method="POST">
+                <form action="actions/submit-comment.php?order=<?= $_GET["order"] ?? "" ?>" method="POST">
                     <input type="hidden" name="postID" value="<?php echo $postId; ?>">
                     <input type="hidden" name="userID" value="<?php echo $_SESSION['UserID']; ?>">
                     <div class="form-group">
@@ -232,63 +232,67 @@ if ($checkResult->num_rows > 0) {
     </div>
 
     <div id="comments" class="container mt-5 post-container">
-    <h2 >Comments</h2>
-    <!-- Sort button with dynamic label and functionality based on current sort order -->
-    <?php
-// Assuming $postId is already defined and holds the current post's ID
-$currentOrder = $_GET['order'] ?? 'asc';
-$newOrder = $currentOrder === 'asc' ? 'desc' : 'asc';
-$sortButtonText = $currentOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending';
-?>
-<button class="btn btn-primary sorting" onclick="window.location.href='post-details.php?id=<?php echo $postId; ?>&order=<?php echo $newOrder; ?>#comments'"><?php echo $sortButtonText; ?></button>
-    <div class="container">
+        <h2>Comments</h2>
+        <!-- Sort button with dynamic label and functionality based on current sort order -->
         <?php
-        $sort = $_GET['order'] ?? 'asc';
-        $commentsQueryResult = $conn->query("SELECT * FROM comments WHERE PostID = $postId");
-        $comments = [];
-        $tree = [];
-
-        while ($comment = $commentsQueryResult->fetch_assoc()) {
-            $comments[$comment["CommentID"]] = $comment;
-        }
-
-        foreach ($comments as $comment) {
-            if ($comment["ParentID"] == 0) {
-                $tree[] = &$comments[$comment["CommentID"]];
-            } else {
-                $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
-            }
-        }
-        
-        function printComments($comments)
-        {
-            $currentOrder = $_GET['order'] ?? 'asc';
-            foreach ($comments as $comment) {
-                echo "<div style='border: 1px solid black; margin: 10px; padding: 10px; border-radius: 12px;'>";
-                echo $comment["Content"];
-                echo "<br>";
-                echo "ID: " . $comment["CommentID"];
-                echo "<br>";
-                echo "ParentID: " . $comment["ParentID"];
-                //reply button
-                echo '<br><a href="javascript:void(0);" onclick="showReplyBox(' . $comment['CommentID'] . ', ' . $comment['PostID'] . ', \'' . $currentOrder . '\')" class="reply-link">Reply</a>';
-                echo "</div>";
-                echo "<div style='margin-left: 10px;'>";
-                if (isset($comment["children"])) {
-                    printComments($comment["children"]);
-                }
-                echo "</div>";
-            }
-        }
-
-        if ($sort == 'asc') {
-            printComments($tree);
-        } else {
-            printComments(array_reverse($tree));
-        }
+        // Assuming $postId is already defined and holds the current post's ID
+        $currentOrder = $_GET['order'] ?? 'asc';
+        $newOrder = $currentOrder === 'asc' ? 'desc' : 'asc';
+        $sortButtonText = $currentOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending';
         ?>
+        <button style="margin-bottom: 10px;" class="btn btn-primary sorting" onclick="window.location.href='post-details.php?id=<?php echo $postId; ?>&order=<?php echo $newOrder; ?>#comments'"><?php echo $sortButtonText; ?></button>
+        <div class="container">
+            <?php
+            $sort = $_GET['order'] ?? 'asc';
+            $commentsQueryResult = $conn->query("SELECT * FROM comments INNER JOIN users ON comments.UserID = users.UserID WHERE PostID = $postId");
+            $comments = [];
+            $tree = [];
+
+            while ($comment = $commentsQueryResult->fetch_assoc()) {
+                $comments[$comment["CommentID"]] = $comment;
+            }
+
+            foreach ($comments as $comment) {
+                if ($comment["ParentID"] == 0) {
+                    $tree[] = &$comments[$comment["CommentID"]];
+                } else {
+                    $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
+                }
+            }
+            ?>
+
+            <?php function printComments($comments)
+            {
+                $currentOrder = $_GET['order'] ?? 'asc';
+                foreach ($comments as $comment) {
+            ?>
+                    <div style='padding: 10px 30px;  border-top: 1px solid black; margin-top: 10px;'>
+                        <h6 style="margin-bottom: 10px;"><?= $comment["Username"] ?></h6>
+                        <?= $comment["Content"] ?>
+                        <br>
+                        <br>
+                        <!-- Reply button -->
+                        <a href="javascript:void(0);" onclick="showReplyBox(<?= $comment['CommentID'] ?>, <?= $comment['PostID'] ?>,'<?= $currentOrder ?>')" class="reply-link">
+                            Reply
+                        </a>
+                    </div>
+                    <div style='margin-left: 50px;'>
+                        <?php if (isset($comment["children"])) {
+                            printComments($comment["children"]);
+                        } ?>
+                    </div>
+            <?php }
+            } ?>
+
+            <?php
+            if ($sort == 'asc') {
+                printComments($tree);
+            } else {
+                printComments(array_reverse($tree));
+            }
+            ?>
+        </div>
     </div>
-</div>
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
@@ -394,6 +398,7 @@ $sortButtonText = $currentOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'
                 replyContainer.appendChild(parentID);
                 replyContainer.appendChild(postIDInput);
 
+                console.log('a[onclick^="showReplyBox(' + commentId + '"]')
                 var parentDiv = document.querySelector('a[onclick^="showReplyBox(' + commentId + '"]').parentNode;
                 parentDiv.appendChild(replyContainer);
             }
