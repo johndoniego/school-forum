@@ -24,7 +24,7 @@ function submitComment($conn) {
             $stmt->bind_param("iisi", $postID, $userID, $content, $parentID);
 
             if ($stmt->execute()) {
-                header("Location: ../post-details.php?id=$postID&order=$order");
+                header("Location: ../post-details.php?id=$postID&order=$order#comments");
                 exit();
             } else {
                 echo "Error submitting comment.";

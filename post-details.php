@@ -217,7 +217,7 @@ if ($checkResult->num_rows > 0) {
             <br>
             <div class="comment-section">
                 <h3>Leave a Comment</h3>
-                <form action="actions/submit-comment.php" method="POST">
+                <form action="actions/submit-comment.php?order=<?= $_GET["order"] ?>" method="POST">
                     <input type="hidden" name="postID" value="<?php echo $postId; ?>">
                     <input type="hidden" name="userID" value="<?php echo $_SESSION['UserID']; ?>">
                     <div class="form-group">
@@ -280,6 +280,7 @@ $sortButtonText = $currentOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'
                 echo "</div>";
             }
         }
+
         if ($sort == 'asc') {
             printComments($tree);
         } else {
@@ -347,7 +348,7 @@ $sortButtonText = $currentOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'
             } else {
                 var replyContainer = document.createElement("form");
                 replyContainer.method = "POST"
-                replyContainer.action = "actions/submit-comment.php?idorder=" + order;
+                replyContainer.action = "actions/submit-comment.php?order=" + order;
                 replyContainer.classList.add("reply-container");
 
                 var postIDInput = document.createElement("input");
