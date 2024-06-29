@@ -114,9 +114,7 @@ $result = $stmt->get_result();
                     </p>
                 </div>
             </div>
-        <?php endwhile; ?>
-    <?php else : ?>
-        <p>You have no bookmarked posts.</p>
+        <?php endwhile; ?>s
     <?php endif; ?>
 </body>
 
