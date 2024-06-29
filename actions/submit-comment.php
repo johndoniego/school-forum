@@ -23,7 +23,7 @@ function submitComment($conn) {
             $stmt->bind_param("iisi", $postID, $userID, $content, $parentID);
 
             if ($stmt->execute()) {
-                header("Location: ../post-details.php?postId=$postID");
+                header("Location: ../post-details.php?id=$postID");
                 exit();
             } else {
                 echo "Error submitting comment.";
