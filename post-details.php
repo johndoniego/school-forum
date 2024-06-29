@@ -231,50 +231,63 @@ if ($checkResult->num_rows > 0) {
 
     </div>
 
-    <div class="container mt-5 post-container">
-        <h2>Comments</h2>
-        <div class="container">
-            <?php
-            $commentsQueryResult = $conn->query("SELECT * FROM comments WHERE PostID = $postId");
-            $comments = [];
-            $tree = [];
+    <div id="comments" class="container mt-5 post-container">
+    <h2 >Comments</h2>
+    <!-- Sort button with dynamic label and functionality based on current sort order -->
+    <?php
+// Assuming $postId is already defined and holds the current post's ID
+$currentOrder = $_GET['order'] ?? 'asc';
+$newOrder = $currentOrder === 'asc' ? 'desc' : 'asc';
+$sortButtonText = $currentOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending';
+?>
+<button class="btn btn-primary sorting" onclick="window.location.href='post-details.php?id=<?php echo $postId; ?>&order=<?php echo $newOrder; ?>#comments'"><?php echo $sortButtonText; ?></button>
+    <div class="container">
+        <?php
+        $sort = $_GET['order'] ?? 'asc';
+        $commentsQueryResult = $conn->query("SELECT * FROM comments WHERE PostID = $postId");
+        $comments = [];
+        $tree = [];
 
-            while ($comment = $commentsQueryResult->fetch_assoc()) {
-                $comments[$comment["CommentID"]] = $comment;
+        while ($comment = $commentsQueryResult->fetch_assoc()) {
+            $comments[$comment["CommentID"]] = $comment;
+        }
+
+        foreach ($comments as $comment) {
+            if ($comment["ParentID"] == 0) {
+                $tree[] = &$comments[$comment["CommentID"]];
+            } else {
+                $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
             }
-
+        }
+        
+        function printComments($comments)
+        {
+            $currentOrder = $_GET['order'] ?? 'asc';
             foreach ($comments as $comment) {
-                if ($comment["ParentID"] == 0) {
-                    $tree[] = &$comments[$comment["CommentID"]];
-                } else {
-                    $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
+                echo "<div style='border: 1px solid black; margin: 10px; padding: 10px; border-radius: 12px;'>";
+                echo $comment["Content"];
+                echo "<br>";
+                echo "ID: " . $comment["CommentID"];
+                echo "<br>";
+                echo "ParentID: " . $comment["ParentID"];
+                //reply button
+                echo '<br><a href="javascript:void(0);" onclick="showReplyBox(' . $comment['CommentID'] . ', ' . $comment['PostID'] . ', \'' . $currentOrder . '\')" class="reply-link">Reply</a>';
+                echo "</div>";
+                echo "<div style='margin-left: 10px;'>";
+                if (isset($comment["children"])) {
+                    printComments($comment["children"]);
                 }
+                echo "</div>";
             }
-
-            function printComments($comments)
-            {
-                foreach ($comments as $comment) {
-                    echo "<div style='border: 1px solid black; margin: 10px; padding: 10px; border-radius: 12px;'>";
-                    echo $comment["Content"];
-                    echo "<br>";
-                    echo "ID: " . $comment["CommentID"];
-                    echo "<br>";
-                    echo "ParentID: " . $comment["ParentID"];
-                    //reply button
-                    echo '<br><a href="javascript:void(0);" onclick="showReplyBox(' . $comment['CommentID'] . ', '.$comment['PostID'] . ')" class="reply-link">Reply</a>';
-                    echo "</div>";
-                    echo "<div style='margin-left: 10px;'>";
-                    if (isset($comment["children"])) {
-                        printComments($comment["children"]);
-                    }
-                    echo "</div>";
-                }
-            }
-
+        }
+        if ($sort == 'asc') {
             printComments($tree);
-            ?>
-        </div>
+        } else {
+            printComments(array_reverse($tree));
+        }
+        ?>
     </div>
+</div>
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>
@@ -325,7 +338,7 @@ if ($checkResult->num_rows > 0) {
             modal.style.display = "none";
         }
 
-        function showReplyBox(commentId, postID) {
+        function showReplyBox(commentId, postID, order) {
             var replyBoxId = "replyBox" + commentId;
             var existingBox = document.getElementById(replyBoxId);
             if (existingBox) {
@@ -334,7 +347,7 @@ if ($checkResult->num_rows > 0) {
             } else {
                 var replyContainer = document.createElement("form");
                 replyContainer.method = "POST"
-                replyContainer.action = "actions/submit-comment.php"
+                replyContainer.action = "actions/submit-comment.php?idorder=" + order;
                 replyContainer.classList.add("reply-container");
 
                 var postIDInput = document.createElement("input");

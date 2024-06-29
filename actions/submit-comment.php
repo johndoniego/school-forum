@@ -2,7 +2,7 @@
 session_start();
 include('../config.php');
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
+echo "Hello";
 function submitComment($conn) {
     try {
         if (isset($_SESSION['UserID']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -10,6 +10,7 @@ function submitComment($conn) {
             $userID = $_SESSION['UserID'];
             $content = isset($_POST['content']) ? $conn->real_escape_string($_POST['content']) : '';
             $parentID = isset($_POST['parentID']) ? $conn->real_escape_string($_POST['parentID']) : 0;
+            $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
 
             if (empty($postID) || empty($content)) {
                 echo "Post ID or content is missing.";
@@ -23,7 +24,7 @@ function submitComment($conn) {
             $stmt->bind_param("iisi", $postID, $userID, $content, $parentID);
 
             if ($stmt->execute()) {
-                header("Location: ../post-details.php?id=$postID");
+                header("Location: ../post-details.php?id=$postID&order=$order");
                 exit();
             } else {
                 echo "Error submitting comment.";
