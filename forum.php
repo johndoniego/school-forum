@@ -6,7 +6,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $perPage = 10;
 $offset = ($page - 1) * $perPage;
 
-$sql = "SELECT PostID, Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
+$sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :perPage OFFSET :offset";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -20,7 +20,7 @@ $totalPosts = $totalRow['total'];
 $totalPages = ceil($totalPosts / $perPage);
 
 function fetchLimitedRecentPosts($conn, $limit = 5) {
-    $sql = "SELECT PostID, Title, Content, ImagePath, CreationDate FROM Posts ORDER BY CreationDate DESC LIMIT :limit";
+    $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :limit";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
@@ -115,7 +115,8 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
                 <div class="card-body posts">
 
                     <!-- Post Title -->
-                    <h5 class="card-title"><img src="assets/img/placeholder.png" alt="User Image" class="user-img"><a
+                    <h5 class="card-title"><h5 class="card-title">
+                        <img src="uploads/user/<?php echo $post['ProfilePicture']; ?>" alt="User Image" class="user-img"><a
                             class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?php
                               $title = $post['Title'] ?? 'No Title';
                                  echo mb_substr($title, 0, 69);
@@ -149,7 +150,7 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
                 <div class="card mb-3">
                     <div class="card-body posts">
                         <h5 class="card-title">
-                            <img src="assets/img/placeholder.png" alt="User Image" class="user-img">
+                        <img src="uploads/user/<?php echo $post['ProfilePicture']; ?>" alt="User Image" class="user-img">
                             <a class="post-title" href=""><?php
                               $title = $post['Title'] ?? 'No Title';
                                  echo mb_substr($title, 0, 14);

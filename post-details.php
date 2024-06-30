@@ -243,56 +243,59 @@ if ($checkResult->num_rows > 0) {
         <button style="margin-bottom: 10px;" class="btn btn-primary sorting" onclick="window.location.href='post-details.php?id=<?php echo $postId; ?>&order=<?php echo $newOrder; ?>#comments'"><?php echo $sortButtonText; ?></button>
         <div class="container">
             <?php
-            $sort = $_GET['order'] ?? 'asc';
-            $commentsQueryResult = $conn->query("SELECT * FROM comments INNER JOIN users ON comments.UserID = users.UserID WHERE PostID = $postId");
-            $comments = [];
-            $tree = [];
+        $sort = $_GET['order'] ?? 'asc';
+$commentsQueryResult = $conn->query("SELECT comments.*, users.Username, users.ProfilePicture FROM comments INNER JOIN users ON comments.UserID = users.UserID WHERE PostID = $postId");
+$comments = [];
+$tree = [];
 
-            while ($comment = $commentsQueryResult->fetch_assoc()) {
-                $comments[$comment["CommentID"]] = $comment;
-            }
+while ($comment = $commentsQueryResult->fetch_assoc()) {
+    $comments[$comment["CommentID"]] = $comment;
+}
 
-            foreach ($comments as $comment) {
-                if ($comment["ParentID"] == 0) {
-                    $tree[] = &$comments[$comment["CommentID"]];
-                } else {
-                    $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
-                }
-            }
-            ?>
+foreach ($comments as $comment) {
+    if ($comment["ParentID"] == 0) {
+        $tree[] = &$comments[$comment["CommentID"]];
+    } else {
+        $comments[$comment["ParentID"]]["children"][] = &$comments[$comment["CommentID"]];
+    }
+}
+?>
 
-            <?php function printComments($comments)
-            {
-                $currentOrder = $_GET['order'] ?? 'asc';
-                foreach ($comments as $comment) {
-            ?>
-                    <div style='padding: 10px 30px;  border-top: 1px solid black; margin-top: 10px;'>
-                        <h6 style="margin-bottom: 10px;"><?= $comment["Username"] ?></h6>
-                        <?= $comment["Content"] ?>
-                        <br>
-                        <br>
-                        <!-- Reply button -->
-                        <a href="javascript:void(0);" onclick="showReplyBox(<?= $comment['CommentID'] ?>, <?= $comment['PostID'] ?>,'<?= $currentOrder ?>')" class="reply-link">
-                            Reply
-                        </a>
-                    </div>
-                    <div style='margin-left: 50px;'>
-                        <?php if (isset($comment["children"])) {
-                            printComments($comment["children"]);
-                        } ?>
-                    </div>
-            <?php }
-            } ?>
-
-            <?php
-            if ($sort == 'asc') {
-                printComments($tree);
-            } else {
-                printComments(array_reverse($tree));
-            }
-            ?>
+<?php function printComments($comments)
+{
+    $currentOrder = $_GET['order'] ?? 'asc';
+    foreach ($comments as $comment) {
+?>
+        <div style='padding: 10px 30px; border-top: 1px solid black; margin-top: 10px;'>
+            <!-- Profile Picture -->
+            <h6 style="margin-bottom: 10px;">
+            <img src="uploads/user/<?= $comment["ProfilePicture"] ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+                <?= $comment["Username"] ?></h6>
+            <?= $comment["Content"] ?>
+            <br>
+            <br>
+            <!-- Reply button -->
+            <a href="javascript:void(0);" onclick="showReplyBox(<?= $comment['CommentID'] ?>, <?= $comment['PostID'] ?>,'<?= $currentOrder ?>')" class="reply-link">
+                Reply
+            </a>
         </div>
-    </div>
+        <div style='margin-left: 50px;'>
+            <?php if (isset($comment["children"])) {
+                printComments($comment["children"]);
+            } ?>
+        </div>
+<?php }
+} ?>
+
+<?php
+if ($sort == 'asc') {
+    printComments($tree);
+} else {
+    printComments(array_reverse($tree));
+}
+?>
+</div>
+</div>
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
         <span class="close">&times;</span>

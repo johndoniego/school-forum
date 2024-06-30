@@ -1,8 +1,6 @@
 <link rel="stylesheet" href="css/sidebar.css">
 <div class="sidebar">
     <ul>
-        <li><a href="home.php"><i class="fas fa-home"><img src="images/csulogo.png" alt="Home" class="icon"></i><span
-                    class="link-text">CSU Forum</span></a></li>
         <hr>
         <li><a href="forum.php"><i class="fas fa-comments"><img src="assets/img/comment.png" alt="Home"
                         class="icon"></i><span class="link-text">Forum</span></a></li>
