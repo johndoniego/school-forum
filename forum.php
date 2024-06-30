@@ -5,15 +5,21 @@ session_start();
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $perPage = 10;
 $offset = ($page - 1) * $perPage;
+$categoryID = $_GET['category'] ?? 0;
+$categoryQuery = $categoryID ? "WHERE Posts.CategoryID = $categoryID" : "";
 
-$sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :perPage OFFSET :offset";
+// get category name
+$categoryName = $conn->query("SELECT Categories.CategoryName FROM Categories WHERE CategoryID = $categoryID")->fetch(PDO::FETCH_ASSOC);
+$categoryName = $categoryName['CategoryName'] ?? 'All Posts';
+
+$sql = "SELECT posts.PostID, posts.Title, posts.Content, posts.ImagePath, posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID $categoryQuery ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $recentPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$totalSql = "SELECT COUNT(*) as total FROM Posts";
+$totalSql = "SELECT COUNT(*) as total FROM Posts $categoryQuery";
 $totalResult = $conn->query($totalSql);
 $totalRow = $totalResult->fetch(PDO::FETCH_ASSOC);
 $totalPosts = $totalRow['total'];
@@ -102,21 +108,21 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
         <div class="container mt-3">
             <div class="btn-group" role="group" aria-label="Post Categories">
                 <a href="forum.php" class="btn btn-primary">All Posts</a>
-                <a href="homework-help.php" class="btn btn-primary">Homework Help</a>
-                <a href="announcements.php" class="btn btn-primary">Announcements</a>
-                <a href="events.php" class="btn btn-primary">Events</a>
-                <a href="general-discussions.php" class="btn btn-primary">General Discussions</a>
+                <a href="forum.php?category=1" class="btn btn-primary">Homework Help</a>
+                <a href="forum.php?category=2" class="btn btn-primary">Announcements</a>
+                <a href="forum.php?category=3" class="btn btn-primary">Events</a>
+                <a href="forum.php?category=4" class="btn btn-primary">General Discussions</a>
             </div>
         </div>
         <div class="container mt-5">
-            <h2>All Posts</h2>
+            <h2><?= $categoryName ?></h2>
             <?php foreach ($recentPosts as $post): ?>
             <div class="card mb-3">
                 <div class="card-body posts">
 
                     <!-- Post Title -->
                     <h5 class="card-title"><h5 class="card-title">
-                        <img src="uploads/user/<?php echo $post['ProfilePicture']; ?>" alt="User Image" class="user-img"><a
+                        <img src="uploads/user/<?= $post['ProfilePicture'] ?? ""?>" alt="User Image" class="user-img"><a
                             class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?php
                               $title = $post['Title'] ?? 'No Title';
                                  echo mb_substr($title, 0, 69);
