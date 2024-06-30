@@ -2,19 +2,24 @@
 session_start();
 include('config.php'); // Adjust the path as necessary
 
-// Check if the user is logged in and has a valid UserID in the session
 if (isset($_SESSION['UserID'])) {
     $userId = $_SESSION['UserID'];
 
-    // Prepare a statement to prevent SQL injection
-    $stmt = $conn->prepare("SELECT Username, Email, FirstName, LastName, DateOfBirth, ProfilePicture FROM Users WHERE UserID = ?");
-    $stmt->bind_param("i", $userId);
+    // Using MySQLi
+    $query = "SELECT PostID, Title, Content, CreationDate FROM Posts WHERE UserID = ? ORDER BY CreationDate DESC";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $userId); // Correct variable name to $userId and use bind_param
     $stmt->execute();
     $result = $stmt->get_result();
+    $posts = $result->fetch_all(MYSQLI_ASSOC);
 
-    if ($result->num_rows > 0) {
-        $userProfile = $result->fetch_assoc();
-    } else {
+    $stmt = $conn->prepare("SELECT Username, Email, FirstName, LastName, DateOfBirth, ProfilePicture FROM Users WHERE UserID = ?");
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $userProfile = $result->fetch_assoc(); // Fetching single row, assuming UserID is unique
+
+    if (!$userProfile) {
         echo "Profile not found.";
         exit();
     }
@@ -25,98 +30,42 @@ if (isset($_SESSION['UserID'])) {
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
+    <link rel="stylesheet" href="assets/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css">
+    <script src="assets/bootstrap-5.3.0-alpha3-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="css/main/user.css">
     <title>User Profile</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            flex: 1;
-        }
-        #main-header {
-            background-color: #007bff;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-        }
-        #main-footer {
-            background-color: #007bff;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto;
-        }
-        .content {
-            background: #fff;
-            padding: 20px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .profile-picture {
-            border-radius: 50%;
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input[type="text"], .form-group input[type="date"], .form-group input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .form-group input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .form-group input[type="submit"]:hover {
-            background-color: #555;
-        }
+
     </style>
 </head>
+
 <body>
-    <header id="main-header">
-        <h1>User Profile</h1>
-    </header>
+    <?php include('commons/header.php'); ?>
+    <?php include('commons/sidebar.php'); ?>
     <div class="container">
         <div class="content">
             <h2>Profile Information</h2>
             <?php if (!empty($userProfile['ProfilePicture'])): ?>
-                <img src="uploads/<?php echo htmlspecialchars($userProfile['ProfilePicture']); ?>" alt="Profile Picture" class="profile-picture"><br>
+            <img src="uploads/<?php echo htmlspecialchars($userProfile['ProfilePicture']); ?>" alt="Profile Picture"
+                class="profile-picture"><br>
             <?php endif; ?>
             <form method="post" action="actions/edit-user.php" enctype="multipart/form-data">
-                <div class="form-group">
+                <div class="form-group"> want
                     <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="firstName" value="<?php echo htmlspecialchars($userProfile['FirstName']); ?>"><br>
+                    <input type="text" id="firstName" name="firstName"
+                        value="<?php echo htmlspecialchars($userProfile['FirstName']); ?>"><br>
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="lastName" value="<?php echo htmlspecialchars($userProfile['LastName']); ?>"><br>
+                    <input type="text" id="lastName" name="lastName"
+                        value="<?php echo htmlspecialchars($userProfile['LastName']); ?>"><br>
                 </div>
                 <div class="form-group">
                     <label for="dateOfBirth">Date of Birth:</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth" value="<?php echo htmlspecialchars($userProfile['DateOfBirth']); ?>"><br>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth"
+                        value="<?php echo htmlspecialchars($userProfile['DateOfBirth']); ?>"><br>
                 </div>
                 <div class="form-group">
                     <label for="profilePicture">Profile Picture:</label>
@@ -128,7 +77,28 @@ if (isset($_SESSION['UserID'])) {
             </form>
         </div>
     </div>
+    <div class="user-posts">
+        <h3>Your Posts</h3>
+        <?php if (!empty($posts)): ?>
+        <?php foreach ($posts as $post): ?>
+        <div class="post">
+            <h4><a style="color: black; text-decoration: none;" class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?php
+                              $title = $post['Title'] ?? 'No Title';
+                                 echo mb_substr($title, 0, 30);
+                                 if (mb_strlen($title) > 30) {
+                                  echo "...";
+                                    }
+                            ?></a></h4>
+            <p><?php echo $post['Content']; ?></p>
+            <small>Posted on: <?php echo htmlspecialchars($post['CreationDate']); ?></small>
+        </div>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <p>You have not posted anything yet.</p>
+        <?php endif; ?>
+    </div>
     <footer id="main-footer">
     </footer>
 </body>
+
 </html>

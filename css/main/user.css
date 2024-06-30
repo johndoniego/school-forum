@@ -1,0 +1,127 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 60%;
+    margin: auto;
+    flex: 1;
+}
+
+#main-footer {
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto;
+}
+
+.content {
+    background: #fff;
+    padding: 20px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.profile-picture {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="file"],
+.form-group input[type="submit"] {
+    display: block;
+    /* Make inputs take the full width */
+    width: 100%;
+    /* Use the full width of the form-group */
+    padding: 8px;
+    /* Add some padding inside the inputs */
+    margin: 10px 0;
+    /* Add top and bottom margin, no left and right margin */
+    box-sizing: border-box;
+    /* Include padding and border in the element's total width and height */
+}
+
+.form-group input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #555;
+}
+
+.user-posts {
+    background-color: #f9f9f9;
+    /* Light grey background */
+    padding: 20px;
+    margin-top: 20px;
+    margin-left: auto;
+    /* Center align */
+    margin-right: auto;
+    /* Center align */
+    width: 58.5%;
+    /* Adjusted width */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Soft shadow */
+}
+
+.user-posts h3 {
+    color: #333;
+    /* Dark grey color */
+    margin-bottom: 15px;
+}
+
+.post {
+    background-color: #fff;
+    /* White background */
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word;
+    /* Soft shadow */
+}
+
+.post h4 {
+    color: #007bff;
+    /* Bootstrap primary color */
+    margin-bottom: 10px;
+}
+
+.post p {
+    color: #666;
+    /* Medium grey color */
+    line-height: 1.5;
+}
+
+.post small {
+    color: #999;
+    /* Light grey color */
+}

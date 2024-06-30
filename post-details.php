@@ -49,8 +49,16 @@ if ($checkResult->num_rows > 0) {
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="tinymce_7.2.0\tinymce\js\tinymce\tinymce.min.js"></script>
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/header.css">
+    <script>
+tinymce.init({
+  selector: '#postContent',
+  inline: true,
+  // Additional options...
+});
+</script>
     <style>
         .post-container {
             max-width: 60%;
@@ -196,20 +204,26 @@ if ($checkResult->num_rows > 0) {
     <?php include('commons/header.php') ?>
 
     <div class="container mt-5 post-container">
-        <div class="actions-container">
-            <?php if ($is_bookmarked) : ?>
-                <a href="actions/remove-bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions" src="assets/img/remove-bookmark.png" alt="Remove Bookmark"></a>
-            <?php else : ?>
-                <a href="actions/bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions" src="assets/img/add-bookmark.png" alt="Add Bookmark"></a>
-            <?php endif; ?>
-        </div>
-        <h1><?= $post['Title'] ?></h1>
-        <p><?= nl2br($post['Content']) ?></p>
-        <?php if (!empty($post['ImagePath'])) : ?>
-            <a href="#imageModal" id="imageLink">
-                <img style="border-radius: 15px; " class="post-image" src="<?= $post['ImagePath'] ?>" alt="Post Image">
-            </a>
+    <div class="actions-container">
+        <?php if ($is_bookmarked) : ?>
+            <a href="actions/remove-bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions" src="assets/img/remove-bookmark.png" alt="Remove Bookmark"></a>
+        <?php else : ?>
+            <a href="actions/bookmark.php?id=<?= $post['PostID'] ?>"><img class="actions" src="assets/img/add-bookmark.png" alt="Add Bookmark"></a>
         <?php endif; ?>
+    </div>
+    <h1><?= $post['Title'] ?></h1>
+    <p><?= $post['Content']; ?></p>
+    <?php if (!empty($post['ImagePath'])) : ?>
+        <a href="#imageModal" id="imageLink">
+            <img style="border-radius: 15px;" class="post-image" src="<?= $post['ImagePath'] ?>" alt="Post Image">
+        </a>
+    <?php endif; ?>
+    <!-- Edit button for the post creator -->
+    <?php if ($_SESSION['UserID'] == $post['UserID']): ?>
+        <a href="#" data-toggle="modal" data-target="#editPostModal" style="position: absolute; bottom: 10px; right: 10px;">
+            <img src="assets/img/edit-icon.png" alt="Edit Post" style="width: 30px; height: 30px;">
+        </a>
+    <?php endif; ?>
         <?php if (isset($_SESSION['UserID'])) : ?>
             <br>
             <hr style="width: 100%; margin-top:10px ;">
@@ -328,6 +342,40 @@ if ($sort == 'asc') {
         </div>
     </div>
 
+    <!-- Edit Post Modal -->
+<div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="actions/edit-post.php" method="POST"  enctype="multipart/form-data">
+        <div class="modal-body">
+          <input type="hidden" name="postID" value="<?= $post['PostID'] ?>">
+          <div class="form-group">
+            <label for="postTitle">Title</label>
+            <input type="text" class="form-control" id="postTitle" name="title" value="<?= $post['Title'] ?>" required>
+          </div>
+          <div class="form-group">
+            <label for="postContent">Content</label>
+            <textarea class="form-control" id="postContent" name="content" required><?= $post['Content'] ?></textarea>
+            <label for="userImage">Upload Image</label>
+            <input type="file" class="form-control-file" id="userImage" name="userImage">
+        </div>
+          <!-- Add more fields as needed -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
     <script>
         document.getElementById('imageLink').onclick = function(event) {
             event.preventDefault(); // Prevent the default anchor action
@@ -407,7 +455,21 @@ if ($sort == 'asc') {
             }
         }
     </script>
-
+    <script>
+$('#editPostModal').on('shown.bs.modal', function () {
+  if (!tinymce.get('postContent')) { // Initialize TinyMCE if not already initialized
+    tinymce.init({
+      selector: '#postContent',
+      // Additional options...
+    });
+  }
+});
+$('#editPostModal').on('hidden.bs.modal', function () {
+  if (tinymce.get('postContent')) { // Destroy TinyMCE instance after modal is closed
+    tinymce.get('postContent').remove();
+  }
+});
+</script>
 </body>
 
 </html>
