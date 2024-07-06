@@ -363,7 +363,7 @@ if ($sort == 'asc') {
             <label for="postContent">Content</label>
             <textarea class="form-control" id="postContent" name="content" required><?= $post['Content'] ?></textarea>
             <label for="userImage">Upload Image</label>
-            <input type="file" class="form-control-file" id="userImage" name="userImage">
+            <input type="file" class="form-control-file" id="userImage" name="image">
         </div>
           <!-- Add more fields as needed -->
         </div>
