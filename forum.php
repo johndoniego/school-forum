@@ -12,7 +12,7 @@ $categoryQuery = $categoryID ? "WHERE Posts.CategoryID = $categoryID" : "";
 $categoryName = $conn->query("SELECT Categories.CategoryName FROM Categories WHERE CategoryID = $categoryID")->fetch(PDO::FETCH_ASSOC);
 $categoryName = $categoryName['CategoryName'] ?? 'All Posts';
 
-$sql = "SELECT posts.PostID, posts.Title, posts.Content, posts.ImagePath, posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID $categoryQuery ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
+$sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture, Users.Username FROM Posts JOIN Users ON Posts.UserID = Users.UserID $categoryQuery ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -26,7 +26,7 @@ $totalPosts = $totalRow['total'];
 $totalPages = ceil($totalPosts / $perPage);
 
 function fetchLimitedRecentPosts($conn, $limit = 5) {
-    $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :limit";
+    $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture, Users.Username FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :limit";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
@@ -119,19 +119,27 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
             <?php foreach ($recentPosts as $post): ?>
             <div class="card mb-3">
                 <div class="card-body posts">
+                    <!-- User Name and Post Title -->
+                    <div class="post-user">
+                    <img src="uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
+                    alt="User Image" class="user-img">
+                    <?= $post['Username'] ?? "Unknown"; ?>
+                    </div>
+                    <h5 class="card-title">
 
-                    <!-- Post Title -->
-                    <h5 class="card-title"><h5 class="card-title">
-                        <img src="uploads/user/<?= $post['ProfilePicture'] ?? ""?>" alt="User Image" class="user-img"><a
-                            class="post-title" href="post-details.php?id=<?= $post['PostID'] ?? "null" ?>"><?php
-                              $title = $post['Title'] ?? 'No Title';
-                                 echo mb_substr($title, 0, 69);
-                                 if (mb_strlen($title) > 50) {
-                                  echo "...";
-                                    }
-                            ?></a></h5>
+                        <a class="post-title"
+                            href="post-details.php?id=<?= htmlspecialchars($post['PostID'] ?? "null") ?>">
+                            <?php
+                $title = $post['Title'] ?? 'No Title';
+                echo htmlspecialchars(mb_substr($title, 0, 69));
+                if (mb_strlen($title) > 50) {
+                    echo "...";
+                }
+                ?>
+                        </a>
+                    </h5>
                     <p class="card-text"><small class="text-muted">Posted on
-                            <?= $post['CreationDate'] ?? 'Unknown Date' ?></small></p>
+                            <?= htmlspecialchars($post['CreationDate'] ?? 'Unknown Date') ?></small></p>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -155,8 +163,10 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
             foreach ($recentPosts as $post): ?>
                 <div class="card mb-3">
                     <div class="card-body posts">
+                    <img src="uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
+                    alt="User Image" class="user-img">
+                    <?= $post['Username'] ?? "Unknown"; ?>
                         <h5 class="card-title">
-                        <img src="uploads/user/<?php echo $post['ProfilePicture']; ?>" alt="User Image" class="user-img">
                             <a class="post-title" href=""><?php
                               $title = $post['Title'] ?? 'No Title';
                                  echo mb_substr($title, 0, 14);

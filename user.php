@@ -52,7 +52,7 @@ if (isset($_SESSION['UserID'])) {
                 class="profile-picture"><br>
             <?php endif; ?>
             <form method="post" action="actions/edit-user.php" enctype="multipart/form-data">
-                <div class="form-group"> want
+                <div class="form-group">
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" name="firstName"
                         value="<?php echo htmlspecialchars($userProfile['FirstName']); ?>"><br>

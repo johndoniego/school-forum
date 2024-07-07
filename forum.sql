@@ -61,7 +61,8 @@ ADD COLUMN `FirstName` VARCHAR(255) NOT NULL,
 ADD COLUMN `LastName` VARCHAR(255) NOT NULL,
 ADD COLUMN `DateOfBirth` DATE,
 ADD COLUMN `ProfilePicture` VARCHAR(255);
-
+ALTER TABLE `Users`
+ADD COLUMN `Admin` BOOLEAN NOT NULL DEFAULT FALSE;
 -- Step 4 (Optional): Update Existing Posts with Categories
 -- Example: Update a post to "Homework Help" category
 -- UPDATE `Posts` SET `CategoryID` = (SELECT `CategoryID` FROM `Categories` WHERE `CategoryName` = 'Homework Help') WHERE `PostID` = [YourPostID];
