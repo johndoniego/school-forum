@@ -50,6 +50,7 @@
             if (password_verify($password, $user['Password'])) {
                 // Password is correct, store the user ID in session
                 $_SESSION['UserID'] = $user['UserID'];
+                $_SESSION['Admin'] = $user['Admin'];
                 header("Location: forum.php");
                 exit(); // Prevent further script execution after redirect
             } else {
