@@ -221,7 +221,7 @@ tinymce.init({
     <!-- Edit button for the post creator -->
     <?php if ($_SESSION['UserID'] == $post['UserID']): ?>
         <a href="#" data-toggle="modal" data-target="#editPostModal" style="position: absolute; bottom: 10px; right: 10px;">
-            <img src="assets/img/pencil.png" alt="Edit Post" style="width: 30px; height: 30px;">
+            <img src="assets/img/edit-icon.png" alt="Edit Post" style="width: 30px; height: 30px;">
         </a>
     <?php endif; ?>
         <?php if (isset($_SESSION['UserID'])) : ?>

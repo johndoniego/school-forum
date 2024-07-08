@@ -1,0 +1,223 @@
+<?php
+include 'config.php'; // Ensure this file properly handles database connection errors
+session_start();
+
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$perPage = 10;
+$offset = ($page - 1) * $perPage;
+$categoryID = $_GET['category'] ?? 0;
+$categoryQuery = $categoryID ? "WHERE Posts.CategoryID = $categoryID" : "";
+
+// get category name
+$categoryName = $conn->query("SELECT Categories.CategoryName FROM Categories WHERE CategoryID = $categoryID")->fetch(PDO::FETCH_ASSOC);
+$categoryName = $categoryName['CategoryName'] ?? 'All Posts';
+
+$sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture, Users.Username FROM Posts JOIN Users ON Posts.UserID = Users.UserID $categoryQuery ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$recentPosts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$totalSql = "SELECT COUNT(*) as total FROM Posts $categoryQuery";
+$totalResult = $conn->query($totalSql);
+$totalRow = $totalResult->fetch(PDO::FETCH_ASSOC);
+$totalPosts = $totalRow['total'];
+$totalPages = ceil($totalPosts / $perPage);
+
+function fetchLimitedRecentPosts($conn, $limit = 5) {
+    $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :limit";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the CSU Forum</title>
+    <link rel="stylesheet" href="../assets/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css">
+    <script src="../assets/bootstrap-5.3.0-alpha3-dist/js/bootstrap.js"></script>
+    <script src="../assets/jquery-3.7.1.min.js"></script>
+    <script src="../tinymce_7.2.0\tinymce\js\tinymce\tinymce.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script type="text/javascript">
+    tinymce.init({
+        selector: '#mytextarea'
+    });
+    </script>
+
+    <style>
+    .post-title {
+        text-decoration: none;
+        color: black;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .user-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <?php include('commons/header.php')?>
+    <!-- Create Post Modal -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPostModalLabel">Create New Post</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="../create_post.php" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="postTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="postTitle" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mytextarea" class="form-label">Content</label>
+                            <textarea id="mytextarea" name="mytextarea" class="form-control"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postImage" class="form-label">Add Image</label>
+                            <input type="file" class="form-control" id="postImage" name="image">
+                        </div>
+                        <!-- Category Selection Dropdown -->
+                        <div class="mb-3">
+                            <label for="postCategory" class="form-label">Category</label>
+                            <select class="form-select" id="postCategory" name="category">
+                                <!-- Dynamically populated options -->
+                                <option value="1">Homework Help</option>
+                                <option value="2">Club Announcements</option>
+                                <option value="3">Event Updates</option>
+                                <option value="4">General Discussion</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-container">
+        <div class="container mt-3 center">
+            <div class="btn-group" role="group" aria-label="Post Categories">
+                <a href="dashboard.php" class="btn btn-primary">All Posts</a>
+                <a href="dashboard.php?category=1" class="btn btn-primary">Homework Help</a>
+                <a href="dashboard.php?category=2" class="btn btn-primary">Announcements</a>
+                <a href="dashboard.php?category=3" class="btn btn-primary">Events</a>
+                <a href="dashboard.php?category=4" class="btn btn-primary">General Discussions</a>
+            </div>
+        </div>
+        <div class="container mt-5 ">
+            <h2><?= $categoryName ?></h2>
+            <?php foreach ($recentPosts as $post): ?>
+            <div class="card mb-3">
+                <div class="card-body posts">
+                    <!-- delete button -->
+                    <button type="button" class="btn btn-danger delete-post-btn" onclick="deletePost(postIdHere)"
+                        style="float: right;">Delete Post</button>
+                    <!-- Edit button -->
+                    <a href="#" data-toggle="modal" data-target="#editPostModal" style="position: absolute; bottom: 10px; right: 10px;">
+            <img src="assets/img/pencil.png" alt="Edit Post" style="width: 30px; height: 30px;">
+        </a>
+                    <!-- User Name and Post Title -->
+                    <div class="post-user">
+                        <img src="../uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
+                            alt="User Image" class="user-img">
+                        <?= $post['Username'] ?? "Unknown"; ?>
+                    </div>
+                    <h5 class="card-title">
+
+                        <a class="post-title"
+                            href="../post-details.php?id=<?= htmlspecialchars($post['PostID'] ?? "null") ?>">
+                            <?php
+                $title = $post['Title'] ?? 'No Title';
+                echo htmlspecialchars(mb_substr($title, 0, 69));
+                if (mb_strlen($title) > 50) {
+                    echo "...";
+                }
+                ?>
+                        </a>
+                    </h5>
+                    <p class="card-text"><small class="text-muted">Posted on
+                            <?= htmlspecialchars($post['CreationDate'] ?? 'Unknown Date') ?></small></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>"><a class="page-link"
+                            href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                    <?php endfor; ?>
+                </ul>
+            </nav>
+        </div>
+            <!-- Edit Post Modal -->
+<div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="actions/edit-post.php" method="POST"  enctype="multipart/form-data">
+        <div class="modal-body">
+          <input type="hidden" name="postID" value="<?= $post['PostID'] ?>">
+          <div class="form-group">
+            <label for="postTitle">Title</label>
+            <input type="text" class="form-control" id="postTitle" name="title" value="<?= $post['Title'] ?>" required>
+          </div>
+          <div class="form-group">
+            <label for="postContent">Content</label>
+            <textarea class="form-control" id="postContent" name="content" required><?= $post['Content'] ?></textarea>
+            <label for="userImage">Upload Image</label>
+            <input type="file" class="form-control-file" id="userImage" name="image">
+        </div>
+          <!-- Add more fields as needed -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+<script>
+$('#editPostModal').on('shown.bs.modal', function () {
+  if (!tinymce.get('postContent')) { // Initialize TinyMCE if not already initialized
+    tinymce.init({
+      selector: '#postContent',
+      // Additional options...
+    });
+  }
+});
+$('#editPostModal').on('hidden.bs.modal', function () {
+  if (tinymce.get('postContent')) { // Destroy TinyMCE instance after modal is closed
+    tinymce.get('postContent').remove();
+  }
+});
+</script>
+
+</html>
