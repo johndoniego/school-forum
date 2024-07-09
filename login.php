@@ -53,7 +53,7 @@
         $password = $_POST['password']; // This is the plaintext password submitted by the user
 
         // Use prepared statements to prevent SQL Injection
-        $sql = $conn->prepare("SELECT UserID, Password FROM Users WHERE Username = ?");
+        $sql = $conn->prepare("SELECT UserID, Admin, Password FROM Users WHERE Username = ?");
         $sql->bind_param("s", $username);
         $sql->execute();
         $result = $sql->get_result();
