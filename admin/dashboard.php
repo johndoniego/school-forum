@@ -25,6 +25,7 @@ $totalRow = $totalResult->fetch(PDO::FETCH_ASSOC);
 $totalPosts = $totalRow['total'];
 $totalPages = ceil($totalPosts / $perPage);
 
+
 function fetchLimitedRecentPosts($conn, $limit = 5) {
     $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :limit";
     $stmt = $conn->prepare($sql);
@@ -144,8 +145,8 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
                 <div class="card mb-3 posts">
                     <div class="card-body">
                         <!-- delete button -->
-                        <button type="button" class="btn btn-danger delete-post-btn" onclick="deletePost(postIdHere)"
-                            style="float: right;">Delete Post</button>
+                        <button type="button" class="btn btn-danger delete-post-btn" onclick="deletePost(<?php echo $post['PostID']; ?>)"
+                        style="float: right;">Delete Post</button>
                         <!-- User Name and Post Title -->
                         <div class="post-user">
                             <img src="../uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
@@ -181,6 +182,28 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
             </div>
         </div>
     </div>
+    <script>
+function deletePost(postId) {
+    if (confirm('Are you sure you want to delete this post?')) {
+        fetch('actions/delete-post.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'id=' + postId
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Handle response data, e.g., refresh the page or show a message
+            console.log(data); // For debugging
+            window.location.reload(); // Reload the page to reflect the changes
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+}
+</script>
 </body>
 
 </html>

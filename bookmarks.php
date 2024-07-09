@@ -27,7 +27,6 @@ $result = $stmt->get_result();
     <title>My Bookmarks</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 20px;
         }
 

@@ -16,7 +16,7 @@
     <div class="container mt-5">
         <h2>Users List</h2>
         <table class="table table-bordered center-table-text">
-            <thead class="thead-dark">
+            <thead style="background-color: blue;" class="thead-light" >
                 <tr>
                     <th>Image</th>
                     <th>Username</th>
