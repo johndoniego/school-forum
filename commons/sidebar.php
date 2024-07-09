@@ -6,7 +6,7 @@
                         class="icon"></i><span class="link-text">Admin</span></a></li>
         <?php endif ?>
         <hr>
-        <li><a href="forum.php"><i class="fas fa-comments"><img src="assets/img/comment.png" alt="Home"
+        <li><a href="index.php"><i class="fas fa-comments"><img src="assets/img/comment.png" alt="Home"
                         class="icon"></i><span class="link-text">Forum</span></a></li>
         <hr>
         <li><a href="./bookmarks.php"><i class="fas fa-question"></i><img src="assets/img/bookmark.png" alt="Help"

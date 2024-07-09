@@ -20,34 +20,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql->close();
 }
 ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="login.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <title>Registration Page</title>
 </head>
-<body style="background-image: url('images/low-poly-grid-haikei.png');"></body>
-    <div class="parent">
-        <div class="left-div">
-            <img src="images/csulogo.png" style="display: block; margin: 0 auto; width: 200px; height: 200px;">
-        </div>
-        <div class="middle-div">
-            <marquee direction="down" height="250%" scrollamount="30"><p>WELCOME CSUAN!</p></marquee>
-        </div>    
-        <div class="right-div">
-            <h1>Register</h1>
-            <form method="post">
-                <input type="text" id="username" name="username" placeholder="Identification Number" required>
-                <br>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <br>
-                <input type="email" id="email" name="email" placeholder="Email" required>
-                <br>
-                <button type="submit">Register</button>
-                <br>
-                <a href="login.php">Login</a>
-            </form>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <!-- CSU Logo -->
+                    <div class="text-center mb-4">
+                        <img src="images/csulogo.png" alt="CSU Logo" style="width: 100px;"> <!-- Adjust the path and size as needed -->
+                    </div>
+                    <!-- Registration Form -->
+                    <h1 class="text-center mb-4">Register</h1>
+                    <form method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        <div class="text-center mt-3">
+                            <a href="login.php">Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+</body>
 </html>

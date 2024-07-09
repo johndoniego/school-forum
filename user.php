@@ -97,8 +97,6 @@ if (isset($_SESSION['UserID'])) {
         <p>You have not posted anything yet.</p>
         <?php endif; ?>
     </div>
-    <footer id="main-footer">
-    </footer>
 </body>
 
 </html>

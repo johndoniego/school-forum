@@ -107,11 +107,11 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
     <div class="post-container">
         <div class="container mt-3">
             <div class="btn-group" role="group" aria-label="Post Categories">
-                <a href="forum.php" class="btn btn-primary">All Posts</a>
-                <a href="forum.php?category=1" class="btn btn-primary">Homework Help</a>
-                <a href="forum.php?category=2" class="btn btn-primary">Announcements</a>
-                <a href="forum.php?category=3" class="btn btn-primary">Events</a>
-                <a href="forum.php?category=4" class="btn btn-primary">General Discussions</a>
+                <a href="index.php" class="btn btn-primary">All Posts</a>
+                <a href="index.php?category=1" class="btn btn-primary">Homework Help</a>
+                <a href="index.php?category=2" class="btn btn-primary">Announcements</a>
+                <a href="index.php?category=3" class="btn btn-primary">Events</a>
+                <a href="index.php?category=4" class="btn btn-primary">General Discussions</a>
             </div>
         </div>
         <div class="container mt-5">

@@ -45,6 +45,7 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
     <script src="../assets/bootstrap-5.3.0-alpha3-dist/js/bootstrap.js"></script>
     <script src="../assets/jquery-3.7.1.min.js"></script>
     <script src="../tinymce_7.2.0\tinymce\js\tinymce\tinymce.min.js"></script>
+    <link rel="stylesheet" href="../css/sidebar.css" />
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script type="text/javascript">
     tinymce.init({
@@ -68,11 +69,23 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
         border-radius: 50%;
         margin-right: 10px;
     }
+
+    .posts {
+        width: 100%;
+    }
+    .test {
+        display: flex;
+        justify-content: center;
+    }
+    .post-container {
+        width: 50%;
+    }
     </style>
 </head>
 
 <body>
     <?php include('commons/header.php')?>
+    <?php include('commons/sidebar.php')?>
     <!-- Create Post Modal -->
     <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
         aria-hidden="true">
@@ -114,110 +127,60 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
         </div>
     </div>
 
-    <div class="post-container">
-        <div class="container mt-3 center">
-            <div class="btn-group" role="group" aria-label="Post Categories">
-                <a href="dashboard.php" class="btn btn-primary">All Posts</a>
-                <a href="dashboard.php?category=1" class="btn btn-primary">Homework Help</a>
-                <a href="dashboard.php?category=2" class="btn btn-primary">Announcements</a>
-                <a href="dashboard.php?category=3" class="btn btn-primary">Events</a>
-                <a href="dashboard.php?category=4" class="btn btn-primary">General Discussions</a>
+    <div class="test">
+        <div class="post-container">
+            <div class="container mt-3 center">
+                <div class="btn-group" role="group" aria-label="Post Categories">
+                    <a href="dashboard.php" class="btn btn-primary">All Posts</a>
+                    <a href="dashboard.php?category=1" class="btn btn-primary">Homework Help</a>
+                    <a href="dashboard.php?category=2" class="btn btn-primary">Announcements</a>
+                    <a href="dashboard.php?category=3" class="btn btn-primary">Events</a>
+                    <a href="dashboard.php?category=4" class="btn btn-primary">General Discussions</a>
+                </div>
             </div>
-        </div>
-        <div class="container mt-5 ">
-            <h2><?= $categoryName ?></h2>
-            <?php foreach ($recentPosts as $post): ?>
-            <div class="card mb-3">
-                <div class="card-body posts">
-                    <!-- delete button -->
-                    <button type="button" class="btn btn-danger delete-post-btn" onclick="deletePost(postIdHere)"
-                        style="float: right;">Delete Post</button>
-                    <!-- Edit button -->
-                    <a href="#" data-toggle="modal" data-target="#editPostModal" style="position: absolute; bottom: 10px; right: 10px;">
-            <img src="assets/img/pencil.png" alt="Edit Post" style="width: 30px; height: 30px;">
-        </a>
-                    <!-- User Name and Post Title -->
-                    <div class="post-user">
-                        <img src="../uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
-                            alt="User Image" class="user-img">
-                        <?= $post['Username'] ?? "Unknown"; ?>
-                    </div>
-                    <h5 class="card-title">
+            <div class="container mt-5 ">
+                <h2><?= $categoryName ?></h2>
+                <?php foreach ($recentPosts as $post): ?>
+                <div class="card mb-3 posts">
+                    <div class="card-body">
+                        <!-- delete button -->
+                        <button type="button" class="btn btn-danger delete-post-btn" onclick="deletePost(postIdHere)"
+                            style="float: right;">Delete Post</button>
+                        <!-- User Name and Post Title -->
+                        <div class="post-user">
+                            <img src="../uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
+                                alt="User Image" class="user-img">
+                            <?= $post['Username'] ?? "Unknown"; ?>
+                        </div>
+                        <h5 class="card-title">
 
-                        <a class="post-title"
-                            href="../post-details.php?id=<?= htmlspecialchars($post['PostID'] ?? "null") ?>">
-                            <?php
+                            <a class="post-title"
+                                href="../post-details.php?id=<?= htmlspecialchars($post['PostID'] ?? "null") ?>">
+                                <?php
                 $title = $post['Title'] ?? 'No Title';
-                echo htmlspecialchars(mb_substr($title, 0, 69));
-                if (mb_strlen($title) > 50) {
+                echo htmlspecialchars(mb_substr($title, 0, 40));
+                if (mb_strlen($title) > 40) {
                     echo "...";
                 }
                 ?>
-                        </a>
-                    </h5>
-                    <p class="card-text"><small class="text-muted">Posted on
-                            <?= htmlspecialchars($post['CreationDate'] ?? 'Unknown Date') ?></small></p>
+                            </a>
+                        </h5>
+                        <p class="card-text"><small class="text-muted">Posted on
+                                <?= htmlspecialchars($post['CreationDate'] ?? 'Unknown Date') ?></small></p>
+                    </div>
                 </div>
+                <?php endforeach; ?>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <?php for($i = 1; $i <= $totalPages; $i++): ?>
+                        <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>"><a class="page-link"
+                                href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
+                        <?php endfor; ?>
+                    </ul>
+                </nav>
             </div>
-            <?php endforeach; ?>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <?php for($i = 1; $i <= $totalPages; $i++): ?>
-                    <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>"><a class="page-link"
-                            href="?page=<?php echo $i; ?>"><?php echo $i; ?></a></li>
-                    <?php endfor; ?>
-                </ul>
-            </nav>
         </div>
-            <!-- Edit Post Modal -->
-<div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="actions/edit-post.php" method="POST"  enctype="multipart/form-data">
-        <div class="modal-body">
-          <input type="hidden" name="postID" value="<?= $post['PostID'] ?>">
-          <div class="form-group">
-            <label for="postTitle">Title</label>
-            <input type="text" class="form-control" id="postTitle" name="title" value="<?= $post['Title'] ?>" required>
-          </div>
-          <div class="form-group">
-            <label for="postContent">Content</label>
-            <textarea class="form-control" id="postContent" name="content" required><?= $post['Content'] ?></textarea>
-            <label for="userImage">Upload Image</label>
-            <input type="file" class="form-control-file" id="userImage" name="image">
-        </div>
-          <!-- Add more fields as needed -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-      </form>
     </div>
-  </div>
-</div>
-
 </body>
-<script>
-$('#editPostModal').on('shown.bs.modal', function () {
-  if (!tinymce.get('postContent')) { // Initialize TinyMCE if not already initialized
-    tinymce.init({
-      selector: '#postContent',
-      // Additional options...
-    });
-  }
-});
-$('#editPostModal').on('hidden.bs.modal', function () {
-  if (tinymce.get('postContent')) { // Destroy TinyMCE instance after modal is closed
-    tinymce.get('postContent').remove();
-  }
-});
-</script>
 
 </html>

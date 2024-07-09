@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $query = "INSERT INTO Posts (UserID, Title, Content, CreationDate, ImagePath, CategoryID) VALUES ('$user_id', '$title', '$content', '$creationDate', '$imagePaths', '$categoryID')";
 
     if (mysqli_query($conn, $query)) {
-        header("Location: forum.php");
+        header("Location: index.php");
     } else {
         echo "Error: " . $query . "<br>" . mysqli_error($conn);
     }
