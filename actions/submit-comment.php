@@ -8,7 +8,7 @@ function submitComment($conn) {
         if (isset($_SESSION['UserID']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $postID = isset($_POST['postID']) ? $conn->real_escape_string($_POST['postID']) : null;
             $userID = $_SESSION['UserID'];
-            $content = isset($_POST['content']) ? $conn->real_escape_string($_POST['content']) : '';
+            $content = isset($_POST['content']) ? nl2br($_POST['content']) : '';
             $parentID = isset($_POST['parentID']) ? $conn->real_escape_string($_POST['parentID']) : 0;
             $order = isset($_GET['order']) ? $_GET['order'] : 'asc';
 
