@@ -52,23 +52,29 @@
         $username = mysqli_real_escape_string($conn, $_POST['username']);
         $password = $_POST['password']; // This is the plaintext password submitted by the user
 
-        // Use prepared statements to prevent SQL Injection
-        $sql = $conn->prepare("SELECT UserID, Admin, Password FROM Users WHERE Username = ?");
+        
+        $sql = $conn->prepare("SELECT UserID, Admin, Password, Ban FROM Users WHERE Username = ?");
+        
         $sql->bind_param("s", $username);
         $sql->execute();
         $result = $sql->get_result();
         
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            // Verify the password
-            if (password_verify($password, $user['Password'])) {
-                // Password is correct, store the user ID in session
-                $_SESSION['UserID'] = $user['UserID'];
-                $_SESSION['Admin'] = $user['Admin'];
-                header("Location: index.php");
-                exit(); // Prevent further script execution after redirect
+            // Check if the user is banned
+            if ($user['Ban'] == 1) {
+                echo "<script>alert('Your account has been banned.')</script>";
             } else {
-                echo "<script>alert('Invalid username or password!')</script>";
+                // Verify the password
+                if (password_verify($password, $user['Password'])) {
+                    // Password is correct, store the user ID in session
+                    $_SESSION['UserID'] = $user['UserID'];
+                    $_SESSION['Admin'] = $user['Admin'];
+                    header("Location: index.php");
+                    exit(); // Prevent further script execution after redirect
+                } else {
+                    echo "<script>alert('Invalid username or password!')</script>";
+                }
             }
         } else {
             echo "<script>alert('Invalid username or password!')</script>";

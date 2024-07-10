@@ -65,6 +65,9 @@ ALTER TABLE `Users`
 ADD COLUMN `Admin` BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE `Users`
 ADD COLUMN `Ban` BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE `Comments`
+ADD COLUMN `ParentID` INT NULL,
+ADD CONSTRAINT `FK_Comments_Parent` FOREIGN KEY (`ParentID`) REFERENCES `Comments`(`CommentID`);
 -- Step 4 (Optional): Update Existing Posts with Categories
 -- Example: Update a post to "Homework Help" category
 -- UPDATE `Posts` SET `CategoryID` = (SELECT `CategoryID` FROM `Categories` WHERE `CategoryName` = 'Homework Help') WHERE `PostID` = [YourPostID];

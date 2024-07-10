@@ -3,8 +3,14 @@
     <ul>
         <?php if (isset($_SESSION['Admin']) && $_SESSION['Admin']==1):?>
         <li><a href="../admin/dashboard.php"><i class="fas fa-comments"><img src="../assets/img/menu-dots.png" alt="Home"
-                        class="icon"></i><span class="link-text">Admin</span></a></li>
+                        class="icon"></i><span class="link-text">Manage Posts</span></a></li>
         <?php endif ?>
+        <hr>
+        <?php if (isset($_SESSION['Admin']) && $_SESSION['Admin']==1):?>
+        <li><a href="../admin/users.php"><i class="fas fa-comments"><img src="../assets/img/users.png" alt="Home"
+                        class="icon"></i><span class="link-text">Manage Users</span></a></li>
+        <?php endif ?>
+
         <hr>
         <li><a href="../index.php"><i class="fas fa-comments"><img src="../assets/img/comment.png" alt="Home"
                         class="icon"></i><span class="link-text">Forum</span></a></li>

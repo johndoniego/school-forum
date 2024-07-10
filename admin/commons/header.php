@@ -6,9 +6,6 @@
                 <!-- Search Bar Added Below -->
                 <div class="search-bar">
                     <form action="/search" method="get">
-                        <button class="user-t ab">
-                            user tab
-                        </button>
                         <input type="text" name="query" placeholder="Search...">
                         <button type="submit">Search</button>
                     </form>
