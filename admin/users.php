@@ -1,3 +1,7 @@
+<?php
+include 'config.php'; // Ensure this file properly handles database connection errors
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,8 +35,8 @@
     </style>
 </head>
 <body>
-    <?include('commons/header.php')?>
-    <?include('commons/sidebar.php')?>
+    <?php include('commons/header.php')?>
+    <?php include('commons/sidebar.php')?>
     
     <div class="container mt-5">
         <table class="table table-bordered center-table-text" id="usersTable">
@@ -47,7 +51,6 @@
             </thead>
             <tbody>
     <?php
-include('config.php'); // Assuming config.php returns a PDO object in $conn
 
 try {
     // Ensure the SQL query selects the Ban column

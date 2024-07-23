@@ -12,7 +12,8 @@ $categoryQuery = $categoryID ? "WHERE Posts.CategoryID = $categoryID" : "";
 $categoryName = $conn->query("SELECT Categories.CategoryName FROM Categories WHERE CategoryID = $categoryID")->fetch(PDO::FETCH_ASSOC);
 $categoryName = $categoryName['CategoryName'] ?? 'All Posts';
 
-$sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture, Users.Username FROM Posts JOIN Users ON Posts.UserID = Users.UserID $categoryQuery ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
+// Updated SQL query to include CategoryName
+$sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture, Users.Username, Categories.CategoryName FROM Posts JOIN Users ON Posts.UserID = Users.UserID JOIN Categories ON Posts.CategoryID = Categories.CategoryID $categoryQuery ORDER BY CreationDate DESC LIMIT :perPage OFFSET :offset";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
 $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -25,9 +26,9 @@ $totalRow = $totalResult->fetch(PDO::FETCH_ASSOC);
 $totalPosts = $totalRow['total'];
 $totalPages = ceil($totalPosts / $perPage);
 
-
 function fetchLimitedRecentPosts($conn, $limit = 5) {
-    $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture FROM Posts JOIN Users ON Posts.UserID = Users.UserID ORDER BY Posts.CreationDate DESC LIMIT :limit";
+    // Updated SQL query in the function to include CategoryName
+    $sql = "SELECT Posts.PostID, Posts.Title, Posts.Content, Posts.ImagePath, Posts.CreationDate, Users.ProfilePicture, Categories.CategoryName FROM Posts JOIN Users ON Posts.UserID = Users.UserID JOIN Categories ON Posts.CategoryID = Categories.CategoryID ORDER BY Posts.CreationDate DESC LIMIT :limit";
     $stmt = $conn->prepare($sql);
     $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
@@ -80,6 +81,10 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
     }
     .post-container {
         width: 50%;
+    }
+    .category {
+        color: #0d6efd;
+        font-size: 1rem;
     }
     </style>
 </head>
@@ -152,6 +157,7 @@ function fetchLimitedRecentPosts($conn, $limit = 5) {
                             <img src="../uploads/user/<?= htmlspecialchars($post['ProfilePicture'] ?? "") ?>"
                                 alt="User Image" class="user-img">
                             <?= $post['Username'] ?? "Unknown"; ?>
+                            <?php echo '<h2 class="category">' .  $post['CategoryName'] . "</h2>"; ?>
                         </div>
                         <h5 class="card-title">
 

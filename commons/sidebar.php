@@ -21,8 +21,7 @@
         <li><a href="contact.php"><i class="fas fa-envelope"><img src="assets/img/phone-call.png" alt="Contact"
                         class="icon"></i><span class="link-text">Contact Us</span></a></li>
         <hr>
-        <li><a href="logout.php"><i class="fas fa-sign-out-alt"><img src="assets/img/exit.png" alt="Home"
-                        class="icon"></i><span class="link-text">Logout</span></a></li>
+        <li><a href="actions/logout.php"><i class="fas fa-sign-out-alt"><img src="assets/img/exit.png" alt="Home" class="icon"></i><span class="link-text">Logout</span></a></li>
         <hr>
     </ul>
 </div>
