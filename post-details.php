@@ -21,6 +21,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 if ($result->num_rows > 0) {
     $post = $result->fetch_assoc();
+    $title = $post['Title'] ?? 'Default Title';
 } else {
     die('Post not found.');
 }
@@ -43,7 +44,7 @@ if ($checkResult->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= ($post['title']) ?></title>
+    <title><?= ($post['Title']) ?></title>
     <link rel="stylesheet" href="assets/bootstrap-5.3.0-alpha3-dist/css/bootstrap.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -56,7 +57,6 @@ if ($checkResult->num_rows > 0) {
 tinymce.init({
   selector: '#postContent',
   inline: true,
-  // Additional options...
 });
 </script>
     <style>
